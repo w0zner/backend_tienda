@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 
-const ClienteSchema = new mongoose.Schema({
+const UsuarioSchema = new mongoose.Schema({
     nombres: {type: String, required: true},
     apellidos: {type: String, required: true},
     pais: {type: String, required: false},
@@ -17,4 +17,4 @@ const ClienteSchema = new mongoose.Schema({
     rol: { type: mongoose.Schema.Types.ObjectId, ref: 'Rol', required: true} //relacion con rol
 });
 
-module.exports = mongoose.model('cliente', ClienteSchema);
+module.exports = mongoose.model('usuario', UsuarioSchema);

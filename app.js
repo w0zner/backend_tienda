@@ -7,7 +7,8 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 //importamos las rutas
-const cliente_route = require('./routes/cliente');
+const login_route = require('./routes/login');
+const usuario_route = require('./routes/usuario');
 const rol_route = require('./routes/rol')
 
 //definimos puerto e inicializamos express
@@ -40,7 +41,8 @@ app.use((req,res,next)=>{
 });
 
 //definición de rutas
-app.use('/api/clientes', cliente_route);
+app.use('/api/login', login_route)
+app.use('/api/usuarios', usuario_route);
 app.use('/api/roles', rol_route)
 
 module.exports = app;
