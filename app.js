@@ -4,16 +4,18 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+require('dotenv').config();
 
 //importamos las rutas
 const cliente_route = require('./routes/cliente');
+const rol_route = require('./routes/rol')
 
 //definimos puerto e inicializamos express
 const port = process.env.PORT || 5201;
 const app = express();
 
 //hacemos conexión a la base de datos, si es correcto inicia el servidor
-mongoose.connect('mongodb://127.0.0.1:59406/735d2be1-c23f-4f89-bee4-a9a59c4e9193?')
+mongoose.connect(process.env.MONGO_URI)
         .then(() => {
             app.listen(port, () => {
                 console.info('Server running in port ' + port)
@@ -39,5 +41,6 @@ app.use((req,res,next)=>{
 
 //definición de rutas
 app.use('/api/clientes', cliente_route);
+app.use('/api/roles', rol_route)
 
 module.exports = app;

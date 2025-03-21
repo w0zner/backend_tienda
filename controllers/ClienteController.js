@@ -1,13 +1,19 @@
-const Cliente =  require('../models/cliente')
+const Cliente =  require('../models/cliente');
+const Rol = require('../models/rol');
 
 const guardar = async (req, res) => {
     try {
         const data = req.body;
+
         let existeCliente = [];
         existeCliente = await Cliente.find({$or: [{cedula: data.cedula}, {email: data.email}]})
 
         if(existeCliente.length == 0) {
-            const cliente = await Cliente.create(data);
+            const rol =  await Rol.findOne({nombre: req.body.rol})
+
+            req.body.rol = rol._id;
+
+            const cliente = await Cliente.create(req.body);
             res.status(200)
             .json({
                 data: cliente
