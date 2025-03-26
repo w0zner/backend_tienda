@@ -12,7 +12,7 @@ const usuario_route = require('./routes/usuario');
 const rol_route = require('./routes/rol')
 
 //definimos puerto e inicializamos express
-const port = process.env.PORT || 5201;
+const port = process.env.PORT || 5000;
 const app = express();
 
 //hacemos conexión a la base de datos, si es correcto inicia el servidor

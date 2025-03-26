@@ -1,4 +1,5 @@
 const Usuario = require('../models/usuario');
+const jwt = require('../helpers/jwt')
 const bcrypt = require('bcrypt-nodejs')
 
 const login = async (req, res) => {
@@ -8,7 +9,7 @@ const login = async (req, res) => {
     usuarios_arr = await Usuario.find({email: data.email})
 
     if(usuarios_arr.length == 0) {
-        res.status(404)
+        return res.status(404)
         .json({
             message: 'Usuario no encontrado.',
             data: undefined
@@ -18,17 +19,20 @@ const login = async (req, res) => {
         const passwordBD = bcrypt.compareSync(data.password, user.password);
 
         if(!passwordBD) {
-            res.status(404)
+            return res.status(404)
             .json({
                 message: 'Password no coincide.',
                 data: undefined
             })
         }
 
+        const token = jwt.createToken(user)
+
         res.status(200)
         .json({
             message: 'Usuario logueado!',
-            data: user
+            data: user,
+            token: token
         })
     }
 }
