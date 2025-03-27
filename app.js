@@ -4,6 +4,8 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 //importamos las rutas
@@ -31,18 +33,30 @@ app.use(morgan("dev"));
 app.use(bodyparser.urlencoded({extended: true}))        
 app.use(bodyparser.json({limit:'50mb', extended: true}))
 
+app.use(cookieParser());
+
 //configuraciones para las cabeceras y evitar cors
-app.use((req,res,next)=>{
-    res.header('Access-Control-Allow-Origin','*'); 
-    res.header('Access-Control-Allow-Headers','Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Access-Control-Allow-Request-Method');
-    res.header('Access-Control-Allow-Methods','GET, PUT, POST, DELETE, OPTIONS');
-    res.header('Allow','GET, PUT, POST, DELETE, OPTIONS');
-    next();
-});
+const corsOptions = {
+    origin: 'http://localhost:4200',  // El origen de tu aplicación frontend Angular
+    credentials: true,  // Importante para permitir cookies
+    allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Access-Control-Allow-Request-Method'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+  };
+  
+  app.use(cors(corsOptions));  // Usar la configuración CORS
+
+// app.use((req,res,next)=>{
+//     res.header('Access-Control-Allow-Origin','*'); 
+//     res.header('Access-Control-Allow-Headers','Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Access-Control-Allow-Request-Method');
+//     res.header('Access-Control-Allow-Methods','GET, PUT, POST, DELETE, OPTIONS');
+//     res.header('Allow','GET, PUT, POST, DELETE, OPTIONS');
+//     next();
+// });
 
 //definición de rutas
-app.use('/api/login', login_route)
-app.use('/api/usuarios', usuario_route);
-app.use('/api/roles', rol_route)
+const prefix = '/api'
+app.use(prefix + '/login', login_route)
+app.use(prefix + '/usuarios', usuario_route);
+app.use(prefix + '/roles', rol_route)
 
 module.exports = app;

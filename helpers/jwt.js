@@ -10,10 +10,24 @@ const createToken = (usuario) => {
         nombres: usuario.nombres,
         apellidos: usuario.apellidos,
         email: usuario.email,
+        role: usuario.rol.nombre,
         iat: moment().unix(),
-        exp: moment().add(1, 'hours').unix()
+        exp: moment().add(15, 'minutes').unix()
     }
     return jwt.encode(payload, secret)
 }
 
-module.exports = {createToken}
+const refreshToken = (usuario) => {
+    const payload = {
+        sub: usuario._id,
+        nombres: usuario.nombres,
+        apellidos: usuario.apellidos,
+        email: usuario.email,
+        role: usuario.rol.nombre,
+        iat: moment().unix(),
+        exp: moment().add(30, 'minutes').unix()
+    }
+    return jwt.encode(payload, secret)
+}
+
+module.exports = {createToken, refreshToken}

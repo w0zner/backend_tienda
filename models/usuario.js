@@ -14,7 +14,7 @@ const UsuarioSchema = new mongoose.Schema({
     genero: {type: String, required: false},
     fecha_nacimiento: {type: String, required: false},
     cedula: {type: String, required: true, unique: true},
-    rol: { type: mongoose.Schema.Types.ObjectId, ref: 'Rol', required: true} //relacion con rol
+    rol: { type: mongoose.Schema.Types.ObjectId, ref: 'rol', required: true} //relacion con rol
 });
 
 module.exports = mongoose.model('usuario', UsuarioSchema);
