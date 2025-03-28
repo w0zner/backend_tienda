@@ -25,7 +25,7 @@ const refreshToken = (usuario) => {
         email: usuario.email,
         role: usuario.rol.nombre,
         iat: moment().unix(),
-        exp: moment().add(30, 'minutes').unix()
+        exp: moment().add(1, 'hours').unix()
     }
     return jwt.encode(payload, secret)
 }
