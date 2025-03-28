@@ -53,7 +53,12 @@ const registrar = async (req, res) => {
     }
 }
 
+const listar = async (req, res) => {
+    let usuarios = await Usuario.find();
+    res.json({data: clientes})
+}
 
 module.exports = {
-    registrar
+    registrar,
+    listar
 }

@@ -22,7 +22,7 @@ const login_admin = async (req, res) => {
 
         if(user.rol.nombre == process.env.ROL_ADMIN  || 'ADMIN') {
             const passwordBD = bcrypt.compareSync(data.password, user.password);
-            console.log(user)
+            
             if(!passwordBD) {
                 return res.status(404)
                 .json({
@@ -64,13 +64,11 @@ const refresh_admin = async (req, res) => {
   //console.log(req.cookies)
 
   const {refreshToken} = req.body//req.cookies.refreshToken;
-  console.log(refreshToken)
 
   if (!refreshToken) return res.status(401).json({ message: 'No refresh token' });
 
   try {
     const decoded = jwtSimple.decode(refreshToken, process.env.SECRET);
-    console.log(decoded)
     if (decoded.exp < moment().unix()) return res.status(403).json({ message: 'Refresh token expirado' });
 
     let usuarios_arr = [];
