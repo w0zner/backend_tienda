@@ -54,8 +54,29 @@ const registrar = async (req, res) => {
 }
 
 const listar = async (req, res) => {
-    let usuarios = await Usuario.find();
-    res.json({data: clientes})
+    try {
+        const tipo = req.params['tipo']
+        const filtro = req.params['filtro']
+
+        if(tipo==null || tipo=='null') {
+            let usuarios = await Usuario.find().populate('rol');
+            const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+            res.status(200).json({data: clientes})
+        } else {
+            if(tipo=='apellido'){
+                let usuarios = await Usuario.find({apellidos:new RegExp(filtro,'i')}).populate('rol');;
+                const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+                res.status(200).json({data: clientes})
+            } else if(tipo=='nombre') {
+                let usuarios = await Usuario.find({nombres:new RegExp(filtro,'i')}).populate('rol');;
+                const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+                res.status(200).json({data: clientes})
+            }
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({mssagge: 'Error inesperado'})
+    }
 }
 
 module.exports = {
