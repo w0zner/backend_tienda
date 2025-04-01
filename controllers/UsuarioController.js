@@ -85,7 +85,70 @@ const listar = async (req, res) => {
     }
 }
 
+const getById = async (req, res) => {
+    if(req.user) {
+        try {
+            //console.log('params '+req.params.id)
+            const id = req.params.id
+            const usuario = await Usuario.findById(id);
+
+            if (!usuario) {
+                return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+            }
+            
+            res.status(200).json({data: usuario})
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+        }
+    } else {
+        res.status(500).json({mssagge: 'Acceso denegado'})
+    }
+}
+
+const update = async (req, res) => {
+    if(req.user) {
+        console.log(req.body)
+        console.log(req.params.id)
+        const id = req.params.id
+        const usuario = await Usuario.findById(id)
+
+        if(!usuario) {
+            return res.status(404).json({
+                message: 'No existe el registro buscado'
+            })
+        }
+        const cedula = req.body?.cedula
+        if(usuario.cedula != cedula) {
+            const existeCedula = await Usuario.exists({ cedula });
+            if(existeCedula) {
+                return res.status(400).json({
+                    message: 'Ya existe un registro con esa cedula'
+                })
+            }
+        } 
+
+        const email = req.body?.email
+        if(usuario.cedula != cedula) {
+            const existeEmail = await Usuario.exists({ email });
+            if(existeEmail) {
+                return res.status(400).json({
+                    message: 'Ya existe un registro con ese correo electrónico'
+                })
+            }
+        } 
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, {new: true})
+
+        res.status(200).json({data: usuarioActualizado})
+    } else {
+        res.status(500).json({mssagge: 'Acceso denegado'})
+    }
+}
+
 module.exports = {
     registrar,
-    listar
+    listar,
+    getById,
+    update
 }
