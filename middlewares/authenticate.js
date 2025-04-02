@@ -5,7 +5,7 @@ require('dotenv').config();
 const verifyAuthAdmin = (req, res, next) => {
     let payload = null
     if(!req.headers.authorization) {
-        return res.status(201).send({message: 'No headers error'})
+        return res.status(401).send({message: 'No headers error'})
     }
 
     const token = req.headers.authorization.replace(/['"]+/g, '');
@@ -16,7 +16,6 @@ const verifyAuthAdmin = (req, res, next) => {
     } else {
         try {
             payload = jwt.decode(token, process.env.SECRET);
-
             if(payload.exp <= moment().unix()) {
                 return res.status(403).send({message: 'Token expired'})
             }

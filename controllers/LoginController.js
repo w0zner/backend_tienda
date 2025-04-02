@@ -35,15 +35,15 @@ const login_admin = async (req, res) => {
             const refreshToken = jwt.refreshToken(user)
 
             // Guardar el refresh token en una cookie HttpOnly
-            res.cookie('refreshToken', refreshToken, {
+            res.status(200)
+            /*.cookie('refreshToken', refreshToken, {
               domain:'localhost',
               name:'refreshToken',
               httpOnly: true,
               secure: false, // Solo en HTTPS
               sameSite: 'None',//'Strict',
               expires: new Date(Date.now() + 3600000)
-              //maxAge: 30 * 60 * 1000 // 30 minutos //7 * 24 * 60 * 60 * 1000 // 7 días
-            })
+            })*/
             .json({
                 message: 'Usuario logueado!',
                 data: user,
@@ -122,7 +122,7 @@ const login = async (req, res) => {
     const data = req.body;
     let usuarios_arr = [];
 
-    usuarios_arr = await Usuario.find({email: data.email})
+    usuarios_arr = await Usuario.find({email: data.email}).populate('rol')
 
     if(usuarios_arr.length == 0) {
         return res.status(404)
@@ -142,13 +142,16 @@ const login = async (req, res) => {
             })
         }
 
-        const token = jwt.createToken(user)
+        
+        const accesToken = jwt.createToken(user)
+        const refreshToken = jwt.refreshToken(user)
 
         res.status(200)
         .json({
             message: 'Usuario logueado!',
-            data: user,
-            token: token
+                data: user,
+                token: accesToken,
+                refreshToken: refreshToken
         })
     }
 }

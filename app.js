@@ -12,6 +12,7 @@ require('dotenv').config();
 const login_route = require('./routes/login');
 const usuario_route = require('./routes/usuario');
 const rol_route = require('./routes/rol')
+const cupon_route = require('./routes/cupon')
 
 //definimos puerto e inicializamos express
 const port = process.env.PORT || 5000;
@@ -55,8 +56,9 @@ const corsOptions = {
 
 //definición de rutas
 const prefix = '/api'
-app.use(prefix + '/login', login_route)
+app.use(prefix + '/login', login_route);
 app.use(prefix + '/usuarios', usuario_route);
-app.use(prefix + '/roles', rol_route)
+app.use(prefix + '/roles', rol_route);
+app.use(prefix + '/cupones', cupon_route);
 
 module.exports = app;

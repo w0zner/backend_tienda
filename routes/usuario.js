@@ -1,6 +1,6 @@
 const express = require('express');
 const usuarioController = require('../controllers/UsuarioController');
-const authenticate = require('../middlewares/authentica')
+const authenticate = require('../middlewares/authenticate')
 const dataForClient = require('../middlewares/dataForClient')
 
 const api = express.Router();

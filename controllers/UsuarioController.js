@@ -58,8 +58,6 @@ const listar = async (req, res) => {
         try {
             const tipo = req.params['tipo']
             const filtro = req.params['filtro']
-            console.log(tipo)
-            console.log(filtro)
     
             if(tipo==null || tipo=='null') {
                 let usuarios = await Usuario.find().populate('rol');
@@ -88,7 +86,6 @@ const listar = async (req, res) => {
 const getById = async (req, res) => {
     if(req.user) {
         try {
-            //console.log('params '+req.params.id)
             const id = req.params.id
             const usuario = await Usuario.findById(id);
 
@@ -108,39 +105,42 @@ const getById = async (req, res) => {
 
 const update = async (req, res) => {
     if(req.user) {
-        console.log(req.body)
-        console.log(req.params.id)
-        const id = req.params.id
-        const usuario = await Usuario.findById(id)
-
-        if(!usuario) {
-            return res.status(404).json({
-                message: 'No existe el registro buscado'
-            })
+        try {
+            const id = req.params.id
+            const usuario = await Usuario.findById(id)
+    
+            if(!usuario) {
+                return res.status(404).json({
+                    message: 'No existe el registro buscado'
+                })
+            }
+            const cedula = req.body?.cedula
+            if(usuario.cedula != cedula) {
+                const existeCedula = await Usuario.exists({ cedula });
+                if(existeCedula) {
+                    return res.status(400).json({
+                        message: 'Ya existe un registro con esa cedula'
+                    })
+                }
+            } 
+    
+            const email = req.body?.email
+            if(usuario.email != email) {
+                const existeEmail = await Usuario.exists({ email });
+                if(existeEmail) {
+                    return res.status(400).json({
+                        message: 'Ya existe un registro con ese correo electrónico'
+                    })
+                }
+            } 
+    
+            const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, {new: true})
+    
+            res.status(200).json({data: usuarioActualizado})
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
         }
-        const cedula = req.body?.cedula
-        if(usuario.cedula != cedula) {
-            const existeCedula = await Usuario.exists({ cedula });
-            if(existeCedula) {
-                return res.status(400).json({
-                    message: 'Ya existe un registro con esa cedula'
-                })
-            }
-        } 
-
-        const email = req.body?.email
-        if(usuario.email != email) {
-            const existeEmail = await Usuario.exists({ email });
-            if(existeEmail) {
-                return res.status(400).json({
-                    message: 'Ya existe un registro con ese correo electrónico'
-                })
-            }
-        } 
-
-        const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, {new: true})
-
-        res.status(200).json({data: usuarioActualizado})
     } else {
         res.status(500).json({mssagge: 'Acceso denegado'})
     }
@@ -150,18 +150,13 @@ const remove = async (req, res) => {
     if(req.user) {
         try {
             const id = req.params.id
-            const usuario = await Usuario.findByIdAndDelete(id).
-            then(usuarioaEliminar => {
-                if(usuarioaEliminar){
-                    return res.status(204).json({message: 'Registro eliminado'})
-                } else {
-                    res.status(404).json({mssagge: 'Usuario no encontrado'})
-                }
-            })
-            .catch(err=>{
-                console.error(error)
-            res.status(500).json({mssagge: 'Error inesperado'})
-            })
+            const usuario = await Usuario.findByIdAndDelete(id)
+
+            if(!usuario) {
+                return res.status(404).json({message: 'Usuario no encontrado'})
+            }
+            
+            res.status(204).json({message: 'Usuario eliminado'})
         } catch (error) {
             console.error(error)
             res.status(500).json({mssagge: 'Error inesperado'})
