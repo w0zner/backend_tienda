@@ -39,7 +39,7 @@ const registrar = async (req, res) => {
                 })
             }
         } else {
-            res.status(200)
+            res.status(400)
             .json({
                 message: 'El cliente ya existe en la base de datos',
                 data: undefined
@@ -129,7 +129,7 @@ const update = async (req, res) => {
         } 
 
         const email = req.body?.email
-        if(usuario.cedula != cedula) {
+        if(usuario.email != email) {
             const existeEmail = await Usuario.exists({ email });
             if(existeEmail) {
                 return res.status(400).json({
@@ -146,9 +146,33 @@ const update = async (req, res) => {
     }
 }
 
+const remove = async (req, res) => {
+    if(req.user) {
+        try {
+            const id = req.params.id
+            const usuario = await Usuario.findByIdAndDelete(id).
+            then(usuarioaEliminar => {
+                if(usuarioaEliminar){
+                    return res.status(204).json({message: 'Registro eliminado'})
+                } else {
+                    res.status(404).json({mssagge: 'Usuario no encontrado'})
+                }
+            })
+            .catch(err=>{
+                console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+        }
+    }
+}
+
 module.exports = {
     registrar,
     listar,
     getById,
-    update
+    update,
+    remove
 }

@@ -37,7 +37,7 @@ app.use(cookieParser());
 
 //configuraciones para las cabeceras y evitar cors
 const corsOptions = {
-    origin: 'http://localhost:4200',  // El origen de tu aplicación frontend Angular
+    origin: 'http://localhost:5200',  // El origen de tu aplicación frontend Angular
     credentials: true,  // Importante para permitir cookies
     allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Access-Control-Allow-Request-Method'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
