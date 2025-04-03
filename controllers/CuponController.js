@@ -1,4 +1,5 @@
 const Cupon = require('../models/cupon')
+const moment = require('moment')
 
 const listar = async (req, res) => {
     try {
@@ -26,7 +27,12 @@ const obtenerPorId = async (req, res) => {
 const guardar = async (req, res) => {
     try {
         const object = req.body
-        const cupon = await Cupon.create(object)
+        object.createdAt = moment().format('YYYY-MM-DD')
+        console.log(object)
+        const cupon = new Cupon(object)
+
+        //const cupon = 
+        await cupon.save()
 
         res.json({data: cupon})
     } catch (error) {

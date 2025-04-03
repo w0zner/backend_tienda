@@ -6,7 +6,7 @@ const CuponSchema = new mongoose.Schema({
     tipo: {type: String, required: true},
     valor: {type: Number, required: true},
     limite: {type: Number, required: true},
-    createdAt: {type: Date, default: Date.now, required: true}
+    createdAt: {type: Date, default: Date.now}
 })
 
 module.exports = mongoose.model('cupon', CuponSchema)
