@@ -3,7 +3,7 @@ const moment = require('moment')
 
 const listar = async (req, res) => {
     try {
-        const cupones = await Cupon.find()
+        const cupones = await Cupon.find().sort({createdAt: -1})
 
         res.json({data: cupones})
     } catch (error) {
