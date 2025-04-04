@@ -13,6 +13,8 @@ const login_route = require('./routes/login');
 const usuario_route = require('./routes/usuario');
 const rol_route = require('./routes/rol')
 const cupon_route = require('./routes/cupon')
+const config_route = require('./routes/config')
+const producto_route = require('./routes/producto')
 
 //definimos puerto e inicializamos express
 const port = process.env.PORT || 5000;
@@ -60,5 +62,7 @@ app.use(prefix + '/login', login_route);
 app.use(prefix + '/usuarios', usuario_route);
 app.use(prefix + '/roles', rol_route);
 app.use(prefix + '/cupones', cupon_route);
+app.use(prefix + '/config', config_route);
+app.use(prefix + '/producto', producto_route);
 
 module.exports = app;
