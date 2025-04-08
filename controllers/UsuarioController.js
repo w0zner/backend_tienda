@@ -8,7 +8,7 @@ const registrar = async (req, res) => {
 
         let existeUsuario = [];
         existeUsuario = await Usuario.find({$or: [{cedula: data.cedula}, {email: data.email}]})
-
+        
         if(existeUsuario.length == 0) {
             if(data.rol) {
                 const rol =  await Rol.findOne({nombre: data.rol})

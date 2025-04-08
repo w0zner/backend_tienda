@@ -2,8 +2,11 @@ const express = require('express');
 const usuarioController = require('../controllers/UsuarioController');
 const authenticate = require('../middlewares/authenticate')
 const dataForClient = require('../middlewares/dataForClient')
+const verifyLocation = require('../middlewares/verifyLocation')
 
 const api = express.Router();
+
+api.post('/add-user', verifyLocation.verifyEndpoint, verifyLocation.hideHeader ,usuarioController.registrar);
 
 api.post('/', authenticate.verifyAuthAdmin, dataForClient.addDefaultData, usuarioController.registrar);
 api.get('/:id', authenticate.verifyAuthAdmin,usuarioController.getById);
