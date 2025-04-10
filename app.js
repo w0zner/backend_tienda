@@ -41,7 +41,7 @@ app.use(cookieParser());
 //configuraciones para las cabeceras y evitar cors
 const corsOptions = {
     origin: 'http://localhost:5200',  // El origen de tu aplicación frontend Angular
-    credentials: true,  // Importante para permitir cookies
+    //credentials: true,  // Importante para permitir cookies
     allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Access-Control-Allow-Request-Method'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   };
@@ -63,6 +63,6 @@ app.use(prefix + '/usuarios', usuario_route);
 app.use(prefix + '/roles', rol_route);
 app.use(prefix + '/cupones', cupon_route);
 app.use(prefix + '/config', config_route);
-app.use(prefix + '/producto', producto_route);
+app.use(prefix + '/productos', producto_route);
 
 module.exports = app;

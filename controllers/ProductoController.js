@@ -1,5 +1,6 @@
 const Model = require('../models/producto')
 const messages = require('../helpers/responseMessages');
+const multiparty = require('connect-multiparty')
 
 const listar = async (req, res) => {
     try {
@@ -26,7 +27,17 @@ const obtenerPorId = async (req, res) => {
 
 const guardar = async (req, res) => {
     try {
-        const object = req.body
+       
+        const campos = req.body;
+        const archivo = req.files.portada;
+      
+        console.log('Campos:', campos);
+        console.log('Archivo:', archivo);
+       
+        const portada = req.file;
+        
+        const object = campos
+        campos.portada = archivo.name
         const producto = new Model(object)
 
         await producto.save()
