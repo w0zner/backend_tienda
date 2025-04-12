@@ -4,7 +4,14 @@ const multiparty = require('connect-multiparty')
 
 const listar = async (req, res) => {
     try {
-        const productos = await Model.find();
+        const filtro= req.params['filtro']
+
+        let productos=null
+        if(filtro) {
+            productos = await Model.find({titulo: new RegExp(filtro, 'i')});
+        } else {
+            productos = await Model.find();
+        }      
 
         res.json({data: productos})
     } catch (error) {
@@ -30,14 +37,22 @@ const guardar = async (req, res) => {
        
         const campos = req.body;
         const archivo = req.files.portada;
+
+        const image_path= archivo.path
+
+        const name = image_path.split('/')
+        const portada_name= name[name.length-1]
+        console.log(image_path)
+        console.log(name)
+        console.log(portada_name)
+        campos.slug=campos.titulo.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g, '')
+
       
         console.log('Campos:', campos);
         console.log('Archivo:', archivo);
-       
-        const portada = req.file;
         
         const object = campos
-        campos.portada = archivo.name
+        campos.portada = portada_name
         const producto = new Model(object)
 
         await producto.save()
