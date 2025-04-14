@@ -1,5 +1,8 @@
 const Model = require('../models/producto')
 const messages = require('../helpers/responseMessages');
+const fs = require('fs')
+const path = require('path')
+const os = require('os');
 const multiparty = require('connect-multiparty')
 
 const listar = async (req, res) => {
@@ -40,7 +43,15 @@ const guardar = async (req, res) => {
 
         const image_path= archivo.path
 
-        const name = image_path.split('/')
+       /*  const sysos = os.platform()
+        if(sysos == '')
+        \ */
+
+        const separator = path.sep;
+        const name = image_path.split(separator)
+
+        
+
         const portada_name= name[name.length-1]
         console.log(image_path)
         console.log(name)
@@ -92,5 +103,24 @@ const eliminar = async (req, res) => {
     }
 }
 
+const obtenerPortada = (req, res) => {
+    try {
+        const img_name = req.params['img']
+        console.log(img_name)
 
-module.exports = {listar, obtenerPorId, guardar, actualizar, eliminar}
+        fs.stat('./uploads/productos/' + img_name, (err)=> {
+            if(!err) {
+                const path_img = './uploads/productos/' + img_name
+                res.status(200).sendFile(path.resolve(path_img))
+            } else {
+                res.status(404).send(null)
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+
+module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada }

@@ -19,5 +19,6 @@ api.get('/:id', authenticate.verifyAuthAdmin, controller.obtenerPorId)
 api.post('/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.guardar)
 api.put('/:id', authenticate.verifyAuthAdmin, controller.actualizar)
 api.delete('/:id', authenticate.verifyAuthAdmin, controller.eliminar)
+api.get('/obtenerPortada/:img', controller.obtenerPortada)
 
 module.exports = api
