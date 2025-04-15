@@ -24,10 +24,12 @@ const listar = async (req, res) => {
 }
 
 const obtenerPorId = async (req, res) => {
+    console.log("hola")
     try {
         const id = req.params.id
+        console.log(id)
         const producto = await Model.findById(id)
-
+        console.info(producto)
         res.json({data: producto})
     } catch (error) {
         console.error(error)

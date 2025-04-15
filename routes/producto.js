@@ -15,7 +15,7 @@ if (!fs.existsSync(uploadDir)) {
 const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 * 1024 * 1024})
 
 api.get('/:filtro?', authenticate.verifyAuthAdmin, controller.listar)
-api.get('/:id', authenticate.verifyAuthAdmin, controller.obtenerPorId)
+api.get('/obtenerPorId/:id', authenticate.verifyAuthAdmin, controller.obtenerPorId)
 api.post('/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.guardar)
 api.put('/:id', authenticate.verifyAuthAdmin, controller.actualizar)
 api.delete('/:id', authenticate.verifyAuthAdmin, controller.eliminar)
