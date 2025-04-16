@@ -24,12 +24,9 @@ const listar = async (req, res) => {
 }
 
 const obtenerPorId = async (req, res) => {
-    console.log("hola")
     try {
         const id = req.params.id
-        console.log(id)
         const producto = await Model.findById(id)
-        console.info(producto)
         res.json({data: producto})
     } catch (error) {
         console.error(error)
@@ -39,15 +36,10 @@ const obtenerPorId = async (req, res) => {
 
 const guardar = async (req, res) => {
     try {
-       
         const campos = req.body;
         const archivo = req.files.portada;
 
         const image_path= archivo.path
-
-       /*  const sysos = os.platform()
-        if(sysos == '')
-        \ */
 
         const separator = path.sep;
         const name = image_path.split(separator)
@@ -80,10 +72,33 @@ const guardar = async (req, res) => {
 const actualizar = async (req, res) => {
     try {
         const id= req.params.id
-        const object=req.body
+
+        const campos = req.body;
+        const archivo = req.files.portada;
+
+        if(archivo) {
+            const image_path= archivo.path
+
+            const separator = path.sep;
+            const name = image_path.split(separator)
+
+            const portada_name= name[name.length-1]
+            console.log(image_path)
+            console.log(name)
+            console.log(portada_name)
+            console.log('Archivo:', archivo);
+            campos.portada = portada_name
+        }
+        
+        campos.slug=campos.titulo.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g, '')
+
+      
+        console.log('Campos:', campos);
+        
+        const object = campos
         const actualizado= await Model.findByIdAndUpdate(id, object, {new: true})
 
-        res.json({data: actualizado})
+        res.json({dato: actualizado})
     } catch (error) {
         console.error(error)
         res.status(500).json({message: 'Error '+error.message})
