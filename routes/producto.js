@@ -14,11 +14,15 @@ if (!fs.existsSync(uploadDir)) {
 
 const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 * 1024 * 1024})
 
+//productos
 api.get('/:filtro?', authenticate.verifyAuthAdmin, controller.listar)
 api.get('/obtenerPorId/:id', authenticate.verifyAuthAdmin, controller.obtenerPorId)
 api.post('/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.guardar)
 api.put('/:id', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.actualizar)
 api.delete('/:id', authenticate.verifyAuthAdmin, controller.eliminar)
 api.get('/obtenerPortada/:img', controller.obtenerPortada)
+
+//inventario
+api.get('/inventario/:id', authenticate.verifyAuthAdmin, controller.listar_inventario)  
 
 module.exports = api

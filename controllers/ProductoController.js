@@ -1,4 +1,5 @@
 const Model = require('../models/producto')
+const Inventario = require('../models/inventario')
 const messages = require('../helpers/responseMessages');
 const fs = require('fs')
 const path = require('path')
@@ -45,7 +46,6 @@ const guardar = async (req, res) => {
         const name = image_path.split(separator)
 
         
-
         const portada_name= name[name.length-1]
         console.log(image_path)
         console.log(name)
@@ -60,9 +60,18 @@ const guardar = async (req, res) => {
         campos.portada = portada_name
         const producto = new Model(object)
 
-        await producto.save()
+        const productoGuardado = await producto.save()
 
-        res.json({data: producto})
+        let inventario = new Inventario({
+            producto: productoGuardado._id,
+            proveedor: 'Tienda',
+            cantidad: object.stock,
+            usuario: req.user.id
+        })
+
+        await inventario.save()
+
+        res.json({data: productoGuardado, inventario: inventario})
     } catch (error) {
         console.error(error)
         res.status(500).json({message: 'Error '+error.message})
@@ -139,5 +148,16 @@ const obtenerPortada = (req, res) => {
     }
 }
 
+const listar_inventario = async (req, res) => {
+    try {
+        const id = req.params.id
+        const lista = await Inventario.find({producto: id}).populate('usuario') 
+        res.json({data: lista})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
 
-module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada }
+
+module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario }
