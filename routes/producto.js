@@ -24,5 +24,7 @@ api.get('/obtenerPortada/:img', controller.obtenerPortada)
 
 //inventario
 api.get('/inventario/:id', authenticate.verifyAuthAdmin, controller.listar_inventario)  
+api.delete('/inventario/:id', authenticate.verifyAuthAdmin, controller.eliminar_item_inventario) 
+api.post('/inventario/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.guardar_item_inventario)
 
 module.exports = api

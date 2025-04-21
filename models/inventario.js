@@ -6,6 +6,7 @@ const InventarioSchema = new Schema({
     cantidad: {type: Number, default: 0},
     usuario: {type: Schema.Types.ObjectId, ref: 'usuario'},
     proveedor: {type: String},
+    motivo: {type: String},
     createdAt: {type: Date, default: Date.now}
 })
 

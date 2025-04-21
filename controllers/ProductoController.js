@@ -4,7 +4,7 @@ const messages = require('../helpers/responseMessages');
 const fs = require('fs')
 const path = require('path')
 const os = require('os');
-const multiparty = require('connect-multiparty')
+const multiparty = require('connect-multiparty');
 
 const listar = async (req, res) => {
     try {
@@ -66,7 +66,8 @@ const guardar = async (req, res) => {
             producto: productoGuardado._id,
             proveedor: 'Tienda',
             cantidad: object.stock,
-            usuario: req.user.id
+            usuario: req.user.sub,
+            motivo: 'COMPRA'
         })
 
         await inventario.save()
@@ -152,6 +153,8 @@ const listar_inventario = async (req, res) => {
     try {
         const id = req.params.id
         const lista = await Inventario.find({producto: id}).populate('usuario') 
+        console.log(req.user)
+        console.log(lista)
         res.json({data: lista})
     } catch (error) {
         console.error(error)
@@ -159,5 +162,50 @@ const listar_inventario = async (req, res) => {
     }
 }
 
+const eliminar_item_inventario = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const registro = await Inventario.findByIdAndDelete({_id: id})
 
-module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario }
+        const producto = await Model.findById(registro.producto)
+        console.log(producto)
+        console.log(registro.cantidad)
+        const nuevo_stock = parseInt(producto.stock) - parseInt(registro.cantidad)
+
+        const actualizacion_producto = await Model.findByIdAndUpdate({_id: registro.producto}, {
+            stock: nuevo_stock
+        })
+
+        res.status(200).json({data: actualizacion_producto})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+const guardar_item_inventario = async (req, res) => {
+    try {
+        const data = req.body
+        console.log(data)
+        const item = new Inventario(data)
+
+        await item.save()
+
+        const producto = await Model.findById(item.producto)
+        console.log(producto.stock)
+        console.log(item.cantidad)
+        const nuevo_stock = parseInt(producto.stock) + parseInt(item.cantidad)
+
+        const actualizacion_producto = await Model.findByIdAndUpdate({_id: item.producto}, {
+            stock: nuevo_stock
+        })
+
+        res.status(200).json({data: item, producto: actualizacion_producto})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+
+module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario }
