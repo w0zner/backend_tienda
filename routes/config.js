@@ -14,8 +14,8 @@ const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 *
 
 const api = express.Router()
 
-api.get('/', authenticate.verifyAuthAdmin, controller.listar)
-api.get('/:id', authenticate.verifyAuthAdmin, controller.obtenerPorId)
+//api.get('/', authenticate.verifyAuthAdmin, controller.listar)
+api.get('/', authenticate.verifyAuthAdmin, controller.obtenerConfig)
 api.post('/', authenticate.verifyAuthAdmin, controller.guardar)
 api.put('/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.actualizar)
 api.delete('/:id', authenticate.verifyAuthAdmin, controller.eliminar)
