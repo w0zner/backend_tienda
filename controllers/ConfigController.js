@@ -1,5 +1,7 @@
 const Model = require('../models/config')
 const messages = require('../helpers/responseMessages');
+const fs = require('fs')
+const path = require('path')
 
 const listar = async (req, res) => {
     try {
@@ -26,12 +28,23 @@ const obtenerPorId = async (req, res) => {
 
 const guardar = async (req, res) => {
     try {
-        const object = req.body
-        const config = new Model(object)
+        const existe = await Model.findOne()
 
-        await config.save()
+        if(!existe) {
+            const config = await Model.create({
+                categorias: [],
+                titulo: 'Createx',
+                logo: 'logo.jpg',
+                serie: '001',
+                correlativo: '0000001'
+            })
+    
+            res.json({data: config})
+        } else {
+            res.status(500).json({message: 'Ya existe una configuración creada'})
+        }
 
-        res.json({data: config})
+
     } catch (error) {
         console.error(error)
         res.status(500).json({message: 'Error '+error.message})
@@ -40,9 +53,42 @@ const guardar = async (req, res) => {
 
 const actualizar = async (req, res) => {
     try {
-        const id= req.params.id
+        const config= await Model.findOne()
         const object=req.body
-        const actualizado= await Model.findByIdAndUpdate(id, object, {new: true})
+
+        let actualizado=null
+        if(req.files){
+            const image_path= archivo.path
+
+            const separator = path.sep;
+            const name = image_path.split(separator)
+
+            const logo_name= name[name.length-1]
+            
+
+            actualizado= await Model.findByIdAndUpdate(config._id, {
+                categorias: object.categorias,
+                titulo: object.titulo,
+                logo: logo_name,
+                serie: object.serie,
+                correlativo: object.correlativo
+            })
+
+            fs.stat('../uploads/configuraciones' + actualizado.logo, function(err){
+                        if(!err){
+                            fs.unlink('../uploads/configuraciones' + actualizado.logo, (err)=> {
+                                if(err) throw err;
+                            })
+                        }
+                    })
+        } else {
+            actualizado= await Model.findByIdAndUpdate(config._id, {
+                categorias: object.categorias,
+                titulo: object.titulo,
+                serie: object.serie,
+                correlativo: object.correlativo
+            })
+        }
 
         res.json({data: actualizado})
     } catch (error) {

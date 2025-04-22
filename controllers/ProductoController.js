@@ -108,6 +108,14 @@ const actualizar = async (req, res) => {
         const object = campos
         const actualizado= await Model.findByIdAndUpdate(id, object, {new: true})
 
+        fs.stat('../uploads/productos' + campos.portada, function(err){
+            if(!err){
+                fs.unlink('../uploads/productos' + campos.portada, (err)=> {
+                    if(err) throw err;
+                })
+            }
+        })
+
         res.json({dato: actualizado})
     } catch (error) {
         console.error(error)
