@@ -34,7 +34,8 @@ const guardar = async (req, res) => {
                 categorias: [],
                 titulo: 'Createx',
                 logo: 'logo.jpg',
-                serie: '001',
+                establecimiento: '001',
+                punto: '001',
                 correlativo: '0000001'
             })
     
@@ -69,7 +70,8 @@ const actualizar = async (req, res) => {
                 categorias: object.categorias,
                 titulo: object.titulo,
                 logo: logo_name,
-                serie: object.serie,
+                establecimiento: object.establecimiento,
+                punto: object.punto,
                 correlativo: object.correlativo
             })
 
@@ -84,7 +86,8 @@ const actualizar = async (req, res) => {
             actualizado= await Model.findByIdAndUpdate(config._id, {
                 categorias: object.categorias,
                 titulo: object.titulo,
-                serie: object.serie,
+                establecimiento: object.establecimiento,
+                punto: object.punto,
                 correlativo: object.correlativo
             })
         }

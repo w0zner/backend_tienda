@@ -4,8 +4,9 @@ const ConfigSchema = new mongoose.Schema({
     categorias: [{type: Object, required: true}],
     titulo: {type: String, required: true},
     logo: {type: String, required: true},
-    serie: {type: String, required: true},
-    correlativo: {type: String, required: true}
+    establecimiento: {type: String, required: true},
+    punto: {type: String, required: true},
+    correlativo: {type: String, required: true},
 })
 
 module.exports = mongoose.model('config', ConfigSchema)
