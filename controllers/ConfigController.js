@@ -55,19 +55,19 @@ const actualizar = async (req, res) => {
     try {
         const config= await Model.findOne()
         const object=req.body
+        const archivo = req.files?.logo;
 
         let actualizado=null
-        if(req.files){
+        if(archivo){
             const image_path= archivo.path
 
             const separator = path.sep;
             const name = image_path.split(separator)
 
             const logo_name= name[name.length-1]
-            
-
+            console.log(JSON.stringify(object));
             actualizado= await Model.findByIdAndUpdate(config._id, {
-                categorias: object.categorias,
+                categorias:  JSON.parse(object.categorias),
                 titulo: object.titulo,
                 logo: logo_name,
                 establecimiento: object.establecimiento,
@@ -75,16 +75,19 @@ const actualizar = async (req, res) => {
                 correlativo: object.correlativo
             })
 
-            fs.stat('../uploads/configuraciones' + actualizado.logo, function(err){
+            fs.stat('../backend/uploads/configuraciones/' + config.logo, function(err){
+                console.log(err)
+                console.log(config.logo)
                         if(!err){
-                            fs.unlink('../uploads/configuraciones' + actualizado.logo, (err)=> {
+                            fs.unlink('../backend/uploads/configuraciones/' + config.logo, (err)=> {
+                                console.log(err)
                                 if(err) throw err;
                             })
                         }
                     })
         } else {
             actualizado= await Model.findByIdAndUpdate(config._id, {
-                categorias: object.categorias,
+                categorias: JSON.parse(object.categorias),
                 titulo: object.titulo,
                 establecimiento: object.establecimiento,
                 punto: object.punto,
@@ -114,5 +117,24 @@ const eliminar = async (req, res) => {
     }
 }
 
+const obtenerLogo = (req, res) => {
+    try {
+        const img_name = req.params['img']
+        console.log(img_name)
 
-module.exports = {listar, obtenerConfig, guardar, actualizar, eliminar}
+        fs.stat('./uploads/configuraciones/' + img_name, (err)=> {
+            if(!err) {
+                const path_img = './uploads/configuraciones/' + img_name
+                res.status(200).sendFile(path.resolve(path_img))
+            } else {
+                res.status(404).send(null)
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+
+module.exports = {listar, obtenerConfig, guardar, actualizar, eliminar, obtenerLogo}

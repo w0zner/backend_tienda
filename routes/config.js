@@ -16,6 +16,7 @@ const api = express.Router()
 
 //api.get('/', authenticate.verifyAuthAdmin, controller.listar)
 api.get('/', authenticate.verifyAuthAdmin, controller.obtenerConfig)
+api.get('/obtenerLogo/:img', controller.obtenerLogo)
 api.post('/', authenticate.verifyAuthAdmin, controller.guardar)
 api.put('/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.actualizar)
 api.delete('/:id', authenticate.verifyAuthAdmin, controller.eliminar)
