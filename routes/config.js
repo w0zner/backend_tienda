@@ -15,6 +15,7 @@ const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 *
 const api = express.Router()
 
 //api.get('/', authenticate.verifyAuthAdmin, controller.listar)
+api.get('/', controller.obtenerConfig)
 api.get('/', authenticate.verifyAuthAdmin, controller.obtenerConfig)
 api.get('/obtenerLogo/:img', controller.obtenerLogo)
 api.post('/', authenticate.verifyAuthAdmin, controller.guardar)
