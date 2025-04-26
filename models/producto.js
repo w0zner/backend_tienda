@@ -12,6 +12,8 @@ const ProductoSchema = new mongoose.Schema({
     nventas: {type: Number, required: false},
     npuntos: {type: Number, required: false},
     categoria: {type: String, required: true},
+    variedades: [{type: Object, required: false}],
+    titulo_variedad: {type: String, required: false},
     estado: {type: String, default:'Edicion', required: true},
     createdAt: {type: Date, default: Date.now},
 })

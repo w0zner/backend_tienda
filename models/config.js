@@ -6,7 +6,7 @@ const categoriaSchema = new mongoose.Schema({
   });
 
 const ConfigSchema = new mongoose.Schema({
-    categorias: {type: [categoriaSchema], required: true},
+    categorias: [{type: Object, required: true}],
     titulo: {type: String, required: true},
     logo: {type: String, required: true},
     establecimiento: {type: String, required: true},
