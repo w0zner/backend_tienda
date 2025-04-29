@@ -157,6 +157,33 @@ const obtenerPortada = (req, res) => {
     }
 }
 
+const agregar_imagen_galeria = async (req, res) => {
+    try {
+        console.log('subir imagen')
+        const id= req.params.id
+        const  data= req.body
+        console.log(data)
+        const image_path= req.files.imagen.path
+        console.log(image_path)
+
+        const separator = path.sep;
+        const name = image_path.split(separator)
+
+        const imagen_name= name[name.length-1]
+        console.log(imagen_name)
+
+        const reg = await Model.findByIdAndUpdate({_id: id}, {$push: {galeria: {
+            imagen: imagen_name,
+            id: data._id
+        }}})
+
+        res.json({data: reg})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 const listar_inventario = async (req, res) => {
     try {
         const id = req.params.id
@@ -215,5 +242,24 @@ const guardar_item_inventario = async (req, res) => {
     }
 }
 
+const actualizarVariedades = async (req, res) => {
+    try {
+        const id= req.params.id
+        const campos = req.body;
+        console.log(id)
+        console.log(campos)
+        
+        const actualizado= await Model.findByIdAndUpdate(id, {
+            titulo_variedad: campos.titulo_variedad,            
+            variedades: campos.variedades//JSON.parse(campos.variedades),
+        })
 
-module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario }
+        res.json({data: actualizado})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+
+module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario, actualizarVariedades, agregar_imagen_galeria }

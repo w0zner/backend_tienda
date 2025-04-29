@@ -21,6 +21,10 @@ api.post('/', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.g
 api.put('/:id', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.actualizar)
 api.delete('/:id', authenticate.verifyAuthAdmin, controller.eliminar)
 api.get('/obtenerPortada/:img', controller.obtenerPortada)
+api.put('/subirImagenGaleria/:id', [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.agregar_imagen_galeria)
+
+//variedades
+api.put('/variedades/:id', authenticate.verifyAuthAdmin, controller.actualizarVariedades)
 
 //inventario
 api.get('/inventario/:id', authenticate.verifyAuthAdmin, controller.listar_inventario)  
