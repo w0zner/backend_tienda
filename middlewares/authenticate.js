@@ -34,6 +34,7 @@ const verifyAuthAdmin = (req, res, next) => {
 }
 
 const verifyAuth = (req, res, next) => {
+    let payload = null
     if(!req.headers.authorization) {
         return res.status(201).send({message: 'No headers error'})
     }
@@ -45,7 +46,7 @@ const verifyAuth = (req, res, next) => {
         return res.status(403).send({message: 'Invalid token'})
     } else {
         try {
-            const payload = jwt.decode(token, process.env.SECRET);
+            payload = jwt.decode(token, process.env.SECRET);
 
             if(payload.exp <= moment().unix()) {
                 return res.status(403).send({message: 'Token expired'})

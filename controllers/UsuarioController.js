@@ -164,10 +164,31 @@ const remove = async (req, res) => {
     }
 }
 
+const clientGetById = async (req, res) => {
+    if(req.user) {
+        try {
+            const id = req.params.id
+            const usuario = await Usuario.findById(id);
+
+            if (!usuario) {
+                return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+            }
+            
+            res.status(200).json({data: usuario})
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+        }
+    } else {
+        res.status(500).json({mssagge: 'Acceso denegado'})
+    }
+}
+
 module.exports = {
     registrar,
     listar,
     getById,
     update,
-    remove
+    remove,
+    clientGetById
 }
