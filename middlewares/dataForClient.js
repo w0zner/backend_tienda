@@ -4,4 +4,9 @@ const addDefaultData = (req, res, next) => {
     next()
 }
 
-module.exports = { addDefaultData }
+const addDefaultClientData = (req, res, next) => {
+    req.body.rol = 'USER'
+    next()
+}
+
+module.exports = { addDefaultData, addDefaultClientData }

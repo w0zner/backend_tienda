@@ -15,6 +15,7 @@ api.put('/:id', authenticate.verifyAuthAdmin, usuarioController.update)
 api.delete('/:id', authenticate.verifyAuthAdmin, usuarioController.remove)
 
 api.get('/cliente/:id', authenticate.verifyAuth, usuarioController.clientGetById);
+api.put('/cliente/:id', authenticate.verifyAuth,  usuarioController.cliente_update)
  
 //api.get('/guardar', usuarioController.guardar);
 

@@ -184,11 +184,55 @@ const clientGetById = async (req, res) => {
     }
 }
 
+const cliente_update = async (req, res) => {
+    if(req.user) {
+        try {
+            const id = req.params.id
+            const usuario = await Usuario.findById(id)
+    
+            if(!usuario) {
+                return res.status(404).json({
+                    message: 'No existe el registro buscado'
+                })
+            }
+            const cedula = req.body?.cedula
+            if(usuario.cedula != cedula) {
+                const existeCedula = await Usuario.exists({ cedula });
+                if(existeCedula) {
+                    return res.status(400).json({
+                        message: 'Ya existe un registro con esa cedula'
+                    })
+                }
+            } 
+    
+            const email = req.body?.email
+            if(usuario.email != email) {
+                const existeEmail = await Usuario.exists({ email });
+                if(existeEmail) {
+                    return res.status(400).json({
+                        message: 'Ya existe un registro con ese correo electrónico'
+                    })
+                }
+            } 
+    
+            const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, {new: true})
+    
+            res.status(200).json({data: usuarioActualizado})
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+        }
+    } else {
+        res.status(500).json({mssagge: 'Acceso denegado'})
+    }
+}
+
 module.exports = {
     registrar,
     listar,
     getById,
     update,
     remove,
-    clientGetById
+    clientGetById,
+    cliente_update
 }
