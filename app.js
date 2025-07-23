@@ -11,6 +11,7 @@ require('dotenv').config();
 //importamos las rutas
 const login_route = require('./routes/login');
 const usuario_route = require('./routes/usuario');
+const verificacion_route = require('./routes/verificacion');
 const rol_route = require('./routes/rol')
 const cupon_route = require('./routes/cupon')
 const config_route = require('./routes/config')
@@ -40,13 +41,14 @@ app.use(cookieParser());
 
 //configuraciones para las cabeceras y evitar cors
 const corsOptions = {
-    origin: ['http://localhost:6200', 'http://localhost:5200', 'http://localhost:4200'],  // El origen de tu aplicación frontend Angular
+    origin: '*',//['http://localhost:6200', 'http://localhost:5200', 'http://localhost:4200'],  // El origen de tu aplicación frontend Angular
     //credentials: true,  // Importante para permitir cookies
-    allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Access-Control-Allow-Request-Method'],
+    allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Access-Control-Allow-Request-Method'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-  };
+};
   
-  app.use(cors(corsOptions));  // Usar la configuración CORS
+app.use(cors(corsOptions));  // Usar la configuración CORS
+
 
 // app.use((req,res,next)=>{
 //     res.header('Access-Control-Allow-Origin','*'); 
@@ -60,6 +62,7 @@ const corsOptions = {
 const prefix = '/api'
 app.use(prefix + '/login', login_route);
 app.use(prefix + '/usuarios', usuario_route);
+app.use(prefix + '/cuenta', verificacion_route);
 app.use(prefix + '/roles', rol_route);
 app.use(prefix + '/cupones', cupon_route);
 app.use(prefix + '/config', config_route);

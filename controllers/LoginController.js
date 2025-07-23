@@ -132,6 +132,11 @@ const login = async (req, res) => {
         })
     } else {
         let user = usuarios_arr[0]
+
+        if (!user.verificado) {
+            return res.status(403).json({ message: 'Debes verificar tu cuenta antes de iniciar sesión' });
+        }
+
         const passwordBD = bcrypt.compareSync(data.password, user.password);
 
         if(!passwordBD) {
@@ -156,6 +161,64 @@ const login = async (req, res) => {
     }
 }
 
+const refresh = async (req, res) => {
+    //console.log(req.cookies)
+  
+    const {refreshToken} = req.body//req.cookies.refreshToken;
+  
+    if (!refreshToken) return res.status(401).json({ message: 'No refresh token' });
+  
+    try {
+      const decoded = jwtSimple.decode(refreshToken, process.env.SECRET);
+      if (decoded.exp < moment().unix()) return res.status(403).json({ message: 'Refresh token expirado' });
+  
+      let usuarios_arr = [];
+  
+      usuarios_arr = await Usuario.find({email: decoded.email}).populate('rol')
+  
+      if(usuarios_arr.length == 0) {
+          return res.status(404)
+          .json({
+              message: 'Usuario o Contraseña no encontrado.',
+              data: undefined
+          })
+      } else {
+          let user = usuarios_arr[0]
+  
+          //if(user.rol.nombre == process.env.ROL_ADMIN || 'ADMIN') {
+              //   const passwordBD = bcrypt.compareSync(data.password, user.password);
+              
+              //   if(!passwordBD) {
+              //       return res.status(404)
+              //       .json({
+              //           message: 'Usuario o Contraseña incorrectos.',
+              //           data: undefined
+              //       })
+              //   }
+      
+              const token = jwt.createToken(user)
+      
+              res.status(200)
+              .json({
+                  message: 'Usuario logueado!',
+                  data: user,
+                  token: token
+              })
+        //   } else {
+        //       return res.status(403)
+        //           .json({
+        //               message: 'No tienes el permiso para acceder a esta sección.',
+        //               data: undefined
+        //           })
+        //   }
+      } 
+    } catch (error) {
+      console.log(error)
+      return res.status(401)
+      .json({ message: 'Refresh token expirado' });
+    }
+  }
 
 
-module.exports = { login, login_admin, refresh_admin }
+
+module.exports = { login, login_admin, refresh_admin, refresh }

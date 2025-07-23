@@ -1,6 +1,9 @@
 const Usuario =  require('../models/usuario');
 const Rol = require('../models/rol');
 const bcrypt = require('bcrypt-nodejs')
+const { v4: uuidv4 } = require('uuid');
+const VerificacionCuentaUsuario = require('../models/verificacionCuentaUsuario');
+const nodemailer = require('nodemailer');
 
 const registrar = async (req, res) => {
     try {
@@ -232,6 +235,164 @@ const cliente_update = async (req, res) => {
     }
 }
 
+const registroCliente = async (req, res) => {
+    try {
+        const data = req.body;
+
+        let existeUsuario = [];
+        existeUsuario = await Usuario.find({$or: [{cedula: data.cedula}, {email: data.email}]})
+        
+        if(existeUsuario.length == 0) {
+            if(data.rol) {
+                const rol =  await Rol.findOne({nombre: data.rol})
+                if(rol) {
+                    data.rol = rol._id;
+                } else {
+                    return res.status(400).json({
+                        message: 'El rol no es válido.'
+                    })
+                }
+                if(data.password) {
+                    const salt = bcrypt.genSaltSync()
+                    data.password = bcrypt.hashSync(data.password, salt)
+
+                    const usuario = await Usuario.create(data);
+                    const token = uuidv4();
+
+                    await VerificacionCuentaUsuario.create({
+                        userId: usuario._id,
+                        token,
+                        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
+                    })
+
+                    // Configurar nodemailer
+                    const transporter = nodemailer.createTransport({
+                        // host: 'smtp.gmail.com', // o smtp de Mailgun, etc.
+                        // port: 465,
+                        // secure: true, // true para 465, false para otros puertos
+                        // auth: {
+                        // user: 'cesarrodrigoramirez@gmail.com',
+                        // pass: 'elsenoresmipastor'
+                        // ujga rkyj rzry lpvj 
+                        // },
+                        service: 'gmail',
+                        auth: {
+                            user: 'noreply.tiendita@gmail.com', // tu correo real de Gmail
+                            pass: 'ujgarkyjrzrylpvj'     // tu App Password SIN espacios
+                        },
+                        tls: {
+                          rejectUnauthorized: false  // Permite certificados autofirmados
+                        }
+                    });
+
+                    const link = `http://localhost:5000/api/cuenta/verificacion-usuario?token=${token}`;
+
+                    await transporter.sendMail({
+                        from: 'cesarrodrigoramirez@gmail.com',
+                        to: data.email,
+                        subject: 'Verifica tu cuenta',
+                        html: `<p>Haz clic para verificar tu cuenta de usuario: <a href="${link}">Verificar</a></p>`
+                    });
+
+                    //res.status(201).json({ message: 'Registro exitoso. Verifica tu email.' });
+
+                    res.status(201)
+                    .json({
+                        data: usuario,
+                        message: 'Registro exitoso. Verifica tu email.'
+                    })
+                } else {
+                    return res.status(400).json({
+                        message: 'El password es requerido.'
+                    })
+                }
+            } else {
+                return res.status(400).json({
+                    message: 'El campo rol es requerido'
+                })
+            }
+        } else {
+            res.status(400)
+            .json({
+                message: 'El cliente ya existe en la base de datos',
+                data: undefined
+            })
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: 'Error ' + error.message
+        })
+    }
+}
+
+const verificarCuentaUsuario = async (req, res) => {
+    console.log(req.query)
+    try {
+        const { token } = req.query;
+
+        if (!token) {
+            return res.status(400).json({ mensaje: 'Token no proporcionado' });
+        }
+    
+        const verification = await VerificacionCuentaUsuario.findOne({ token, usado: false });
+        if (!verification || verification.expiresAt < new Date()) {
+          return res.status(400).send('Token inválido o expirado');
+        }
+    
+        await Usuario.findByIdAndUpdate(verification.userId, { verificado: true });
+        verification.usado = true;
+        await verification.save();
+    
+        //res.send('Cuenta verificada correctamente');
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+              <meta charset="UTF-8">
+              <title>Cuenta verificada</title>
+              <style>
+                body {
+                  background: #f4f6f8;
+                  font-family: Arial, sans-serif;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  margin: 0;
+                }
+                .card {
+                  background: white;
+                  padding: 30px;
+                  border-radius: 12px;
+                  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                  text-align: center;
+                }
+                .card h1 {
+                  color: #2ecc71;
+                  margin-bottom: 10px;
+                }
+                .card p {
+                  color: #333;
+                  font-size: 16px;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="card">
+                <h1>✅ ¡Cuenta verificada!</h1>
+                <p>Tu cuenta ha sido verificada exitosamente.<br>
+                Ya podés iniciar sesión con tu correo.</p>
+              </div>
+            </body>
+            </html>
+          `);
+          
+      } catch (err) {
+        res.status(500).send('Error al verificar el email');
+      }
+}
+
 module.exports = {
     registrar,
     listar,
@@ -239,5 +400,7 @@ module.exports = {
     update,
     remove,
     clientGetById,
-    cliente_update
+    cliente_update,
+    registroCliente,
+    verificarCuentaUsuario
 }

@@ -14,6 +14,8 @@ api.get('/buscar/:tipo/:filtro?', authenticate.verifyAuthAdmin, usuarioControlle
 api.put('/:id', authenticate.verifyAuthAdmin, usuarioController.update)
 api.delete('/:id', authenticate.verifyAuthAdmin, usuarioController.remove)
 
+api.post('/registro',dataForClient.addDefaultClientData, usuarioController.registroCliente);
+api.get('/verificacion-cuenta-usuario', usuarioController.verificarCuentaUsuario)
 api.get('/cliente/:id', authenticate.verifyAuth, usuarioController.clientGetById);
 api.put('/cliente/:id', authenticate.verifyAuth,  usuarioController.cliente_update)
  
