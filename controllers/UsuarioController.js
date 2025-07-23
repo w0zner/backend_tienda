@@ -214,6 +214,11 @@ const cliente_update = async (req, res) => {
                     })
                 }
             } 
+            //Se vera despues estrategia para actualizar contraseña
+            /*if(req.body.password) {
+                const salt = bcrypt.genSaltSync()
+                req.body.password = bcrypt.hashSync(req.body.password, salt)
+            } */
     
             const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, {new: true})
     
