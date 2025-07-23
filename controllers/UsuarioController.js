@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt-nodejs')
 const { v4: uuidv4 } = require('uuid');
 const VerificacionCuentaUsuario = require('../models/verificacionCuentaUsuario');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const registrar = async (req, res) => {
     try {
@@ -267,18 +268,10 @@ const registroCliente = async (req, res) => {
 
                     // Configurar nodemailer
                     const transporter = nodemailer.createTransport({
-                        // host: 'smtp.gmail.com', // o smtp de Mailgun, etc.
-                        // port: 465,
-                        // secure: true, // true para 465, false para otros puertos
-                        // auth: {
-                        // user: 'cesarrodrigoramirez@gmail.com',
-                        // pass: 'elsenoresmipastor'
-                        // ujga rkyj rzry lpvj 
-                        // },
                         service: 'gmail',
                         auth: {
-                            user: 'noreply.tiendita@gmail.com', // tu correo real de Gmail
-                            pass: 'ujgarkyjrzrylpvj'     // tu App Password SIN espacios
+                            user: 'noreply.tiendita@gmail.com', 
+                            pass:  process.env.EMAIL_SENDER_PASSWORD
                         },
                         tls: {
                           rejectUnauthorized: false  // Permite certificados autofirmados
@@ -288,7 +281,7 @@ const registroCliente = async (req, res) => {
                     const link = `http://localhost:5000/api/cuenta/verificacion-usuario?token=${token}`;
 
                     await transporter.sendMail({
-                        from: 'cesarrodrigoramirez@gmail.com',
+                        from: 'noreply.tiendita@gmail.com',
                         to: data.email,
                         subject: 'Verifica tu cuenta',
                         html: `<p>Haz clic para verificar tu cuenta de usuario: <a href="${link}">Verificar</a></p>`
