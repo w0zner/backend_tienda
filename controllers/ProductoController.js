@@ -7,6 +7,7 @@ const os = require('os');
 const multiparty = require('connect-multiparty');
 
 const listar = async (req, res) => {
+    console.info("Hola")
     try {
         const filtro= req.params['filtro']
 
