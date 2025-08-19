@@ -261,5 +261,21 @@ const actualizarVariedades = async (req, res) => {
     }
 }
 
+const obtener_producto_slug = async (req, res) => {
+    try {
+        const slug= req.params['slug']
 
-module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario, actualizarVariedades, agregar_imagen_galeria }
+        let productos=null
+        if(slug) {
+            productos = await Model.findOne({slug: slug});
+        }      
+
+        res.json({data: productos})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message}) 
+    }
+}
+
+
+module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario, actualizarVariedades, agregar_imagen_galeria, obtener_producto_slug }
