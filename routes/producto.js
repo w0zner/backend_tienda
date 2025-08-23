@@ -17,6 +17,7 @@ const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 *
 //publico
 api.get('/listar-productos/:filtro?', controller.listar)
 api.get('/obtener-por-slug/:slug?', controller.obtener_producto_slug)
+api.get('/listar-productos-recomendados/:categoria', controller.listarProductosRecomendados)
 
 //productos
 api.get('/:filtro?', authenticate.verifyAuthAdmin, controller.listar)

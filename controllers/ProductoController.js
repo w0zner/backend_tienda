@@ -12,9 +12,25 @@ const listar = async (req, res) => {
 
         let productos=null
         if(filtro) {
-            productos = await Model.find({titulo: new RegExp(filtro, 'i')});
+            productos = await Model.find({titulo: new RegExp(filtro, 'i')}).sort({createdAt: -1});
         } else {
             productos = await Model.find();
+        }      
+
+        res.json({data: productos})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message}) 
+    }
+}
+
+const listarProductosRecomendados = async (req, res) => {
+    try {
+        const categoria= req.params['categoria']
+
+        let productos=null
+        if(categoria) {
+            productos = await Model.find({categoria: categoria}).sort({createdAt: -1}).limit(5);
         }      
 
         res.json({data: productos})
@@ -278,4 +294,4 @@ const obtener_producto_slug = async (req, res) => {
 }
 
 
-module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario, actualizarVariedades, agregar_imagen_galeria, obtener_producto_slug }
+module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario, actualizarVariedades, agregar_imagen_galeria, obtener_producto_slug, listarProductosRecomendados }
