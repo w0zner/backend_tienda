@@ -28,7 +28,24 @@ const obtener_carrito_por_usuario = async function(req, res){
     }
 }
 
+const eliminar_item_carrito = async (req, res) => {
+    if(req.user){
+        try {
+            let id = req.params['id'];
+
+            let reg = await carrito.findByIdAndDelete({_id: id});
+            res.status(200).send({data: reg});
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({message: 'Error del servidor'});
+        }
+    } else {
+        res.status(500).send({message: 'NoAccess'});
+    }
+}
+
 module.exports = {
     agregar_al_carrito,
-    obtener_carrito_por_usuario
+    obtener_carrito_por_usuario,
+    eliminar_item_carrito
 }
