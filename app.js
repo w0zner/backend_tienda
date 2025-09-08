@@ -22,10 +22,24 @@ const carrito_route = require('./routes/carrito')
 const port = process.env.PORT || 5000;
 const app = express();
 
+//Implementacion de socket
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {origin:"*"}
+})
+
+io.on('connection', function(socket){
+    console.log("Cliente conectado:", socket.id);
+    socket.on('delete-carrito', function(data){
+        io.emit('new-carrito', data);
+        console.log(data);
+    })
+})
+
 //hacemos conexión a la base de datos, si es correcto inicia el servidor
 mongoose.connect(process.env.MONGO_URI)
         .then(() => {
-            app.listen(port, () => {
+            server.listen(port, () => {
                 console.info('Server running in port ' + port)
             })
         })
