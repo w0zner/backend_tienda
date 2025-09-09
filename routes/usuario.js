@@ -1,5 +1,7 @@
 const express = require('express');
 const usuarioController = require('../controllers/UsuarioController');
+const direccionController = require('../controllers/DireccionController');
+
 const authenticate = require('../middlewares/authenticate')
 const dataForClient = require('../middlewares/dataForClient')
 const verifyLocation = require('../middlewares/verifyLocation')
@@ -18,6 +20,11 @@ api.post('/registro',dataForClient.addDefaultClientData, usuarioController.regis
 api.get('/verificacion-cuenta-usuario', usuarioController.verificarCuentaUsuario)
 api.get('/cliente/:id', authenticate.verifyAuth, usuarioController.clientGetById);
 api.put('/cliente/:id', authenticate.verifyAuth,  usuarioController.cliente_update)
+
+//-----------------------Direccion----------------------
+api.post('/direccion', authenticate.verifyAuth, direccionController.guardarDireccion)
+api.get('/direccion/:id', authenticate.verifyAuth, direccionController.obtenerDireccionesPorUsuario)
+
  
 //api.get('/guardar', usuarioController.guardar);
 
