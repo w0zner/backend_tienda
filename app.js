@@ -34,6 +34,11 @@ io.on('connection', function(socket){
         io.emit('new-carrito', data);
         console.log(data);
     })
+
+    socket.on('add-carrito', function(data){
+        io.emit('new-carrito-add', data);
+        console.log(data);
+    })
 })
 
 //hacemos conexión a la base de datos, si es correcto inicia el servidor
