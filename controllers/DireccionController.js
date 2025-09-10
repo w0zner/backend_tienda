@@ -35,6 +35,20 @@ const obtenerDireccionesPorUsuario = async (req, res) => {
     }
 }
 
+const obtenerDireccionPrincipalPorUsuario = async (req, res) => {
+    try {
+        const usuario = req.params['id']
+        console.log('u'+usuario)
+        const direccion = await Direccion.findOne({usuario: usuario})
+        console.log('D'+direccion)
+
+        res.status(200).send({data:direccion})
+    } catch(error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 const actualizarEstadoDireccion = async (req, res) => {
     try {
         if(req.user){
@@ -57,8 +71,22 @@ const actualizarEstadoDireccion = async (req, res) => {
     }
 }
 
+const eliminarDireccion = async(req, res) => {
+    try {
+        const id = req.params['id']
+
+        const reg= await Direccion.findByIdAndDelete({_id: id})
+        res.status(200).send({data: reg})
+    } catch(error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 module.exports = {
     guardarDireccion,
     obtenerDireccionesPorUsuario,
-    actualizarEstadoDireccion
+    actualizarEstadoDireccion,
+    eliminarDireccion,
+    obtenerDireccionPrincipalPorUsuario
 }

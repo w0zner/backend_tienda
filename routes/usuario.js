@@ -25,6 +25,8 @@ api.put('/cliente/:id', authenticate.verifyAuth,  usuarioController.cliente_upda
 api.post('/direccion', authenticate.verifyAuth, direccionController.guardarDireccion)
 api.get('/direccion/:id', authenticate.verifyAuth, direccionController.obtenerDireccionesPorUsuario)
 api.put('/direccion-estado/:id', authenticate.verifyAuth, direccionController.actualizarEstadoDireccion)
+api.delete('/direccion/:id', authenticate.verifyAuth, direccionController.eliminarDireccion)
+api.get('/direccion-principal/:id', authenticate.verifyAuth, direccionController.obtenerDireccionPrincipalPorUsuario)
 
  
 //api.get('/guardar', usuarioController.guardar);

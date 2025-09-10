@@ -39,6 +39,10 @@ io.on('connection', function(socket){
         io.emit('new-carrito-add', data);
         console.log(data);
     })
+
+    socket.on('disconnect', function(){
+        console.log("Cliente desconectado:", socket.id);
+    });
 })
 
 //hacemos conexión a la base de datos, si es correcto inicia el servidor
