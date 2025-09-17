@@ -5,18 +5,67 @@ const registroVenta = async (req, res) => {
     if(req.user) {
         const dataVenta = req.body
         const dataDetalles = dataVenta.detalles
-        let detallesGuardados = []
+        //let detallesGuardados = []
+        let serie;
+        let correlativo;
+        let nventas;
+        const ventaLast = await Venta.find().sort({createdAt: -1}).limit(1)
 
+        if(ventaLast.length == 0) {
+            serie = '001';
+            correlativo = '0000001';
+            nventas = serie + '-' + correlativo
+        } else {
+            const lastF = ventaLast[0].nventa.split('-') 
+
+            if(lastF[1] != '9999999') {
+                const obteniendoCorrelativo = parseInt(lastF[1]) + 1
+                const nuevoCorrelativo = zfill(obteniendoCorrelativo, 7)
+                nventas = lastF[0] + '-' + nuevoCorrelativo
+            } else if(lastF[1] == '9999999') {
+                const obteniendoSerie = parseInt(lastF[0]) + 1
+                const nuevoCorrelativo = '0000001'
+                const nuevaSerie = zfill(obteniendoSerie, 3)
+                nventas = nuevaSerie + '-' + nuevoCorrelativo
+            }
+        }
+
+        dataVenta.nventa = nventas
+        dataVenta.estado = 'Procesando'
+
+        console.log(dataVenta)
         const ventaGuardada = await Venta.create(dataVenta)
 
         dataDetalles.forEach(async element => {
+            element.venta = ventaGuardada._id
             await Dventa.create(element)
-            detallesGuardados.push(element)
+            //detallesGuardados.push(element)
         });
 
-        res.status(200).send({venta: ventaGuardada, dventa: detallesGuardados})
+        res.status(200).send({venta: ventaGuardada}) 
     } else {
         res.status(500).send({message: 'NoAccess'})
+    }
+}
+
+function zfill(number, width) {
+    var numberOutput = Math.abs(number); 
+    var length = number.toString().length;
+    var zero = "0";
+    
+    if (width <= length) {
+        if (number < 0) {
+             return ("-" + numberOutput.toString()); 
+        } else {
+             return numberOutput.toString(); 
+        }
+    } else {
+        if (number < 0) {
+            return ("-" + (zero.repeat(width - length)) + numberOutput.toString()); 
+        } else {
+            return ((zero.repeat(width - length)) + numberOutput.toString()); 
+        }
+
     }
 }
 

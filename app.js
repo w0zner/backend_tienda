@@ -93,7 +93,7 @@ app.use(prefix + '/cupones', cupon_route);
 app.use(prefix + '/config', config_route);
 app.use(prefix + '/productos', producto_route);
 app.use(prefix + '/carrito', carrito_route);
-app.use(prefix + '/venta', venta_route);
+app.use(prefix + '/ventas', venta_route);
 
 
 module.exports = app;
