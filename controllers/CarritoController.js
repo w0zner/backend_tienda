@@ -44,8 +44,22 @@ const eliminar_item_carrito = async (req, res) => {
     }
 }
 
+const vaciarCarritoUsuario = async function(req, res){
+    if(req.user){
+        const id = req.params['id'];
+
+        //const carritoUsuario = await carrito.find({ usuario: id }).populate('producto');
+        await carrito.remove({usuario: id})
+
+        res.status(201).send({data: true}); 
+    }else{
+        res.status(500).send({message: 'NoAccess'});
+    }
+}
+
 module.exports = {
     agregar_al_carrito,
     obtener_carrito_por_usuario,
-    eliminar_item_carrito
+    eliminar_item_carrito,
+    vaciarCarritoUsuario
 }

@@ -1,5 +1,7 @@
 const Venta = require('../models/venta')
 const Dventa = require('../models/dventa')
+const Producto = require('../models/producto')
+const Carrito = require('../models/carrito')
 
 const registroVenta = async (req, res) => {
     if(req.user) {
@@ -39,7 +41,14 @@ const registroVenta = async (req, res) => {
         dataDetalles.forEach(async element => {
             element.venta = ventaGuardada._id
             await Dventa.create(element)
-            //detallesGuardados.push(element)
+
+            //Actualizamos el stock del producto
+            const elementProducto = await Producto.findById({_id: element.producto})
+            const newStock = elementProducto.stock - element.cantidad;
+
+            await Producto.findByIdAndUpdate({_id: element.producto}, {stock: newStock})
+
+            await Carrito.remove({usuario: dataVenta.usuario})
         });
 
         res.status(200).send({venta: ventaGuardada}) 
