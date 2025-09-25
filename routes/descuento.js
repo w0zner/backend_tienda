@@ -15,8 +15,8 @@ if (!fs.existsSync(uploadDir)) {
 
 const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 * 1024 * 1024})
 
-api.post('/registrar', [authenticate.verifyAuthAdmin, multipartyMiddleware], descuentoController.listarDescuentos)
-api.get('/listar/:filtro?', authenticate.verifyAuthAdmin, descuentoController.registrarDescuento)
+api.post('/registrar', [authenticate.verifyAuthAdmin, multipartyMiddleware], descuentoController.registrarDescuento)
+api.get('/listar/:filtro?', authenticate.verifyAuthAdmin, descuentoController.listarDescuentos)
 api.get('/obtenerPortada/:img', descuentoController.obtenerPortada)
 api.get('/obtener/:id', descuentoController.obtenerPorId)
 api.delete('/:id', authenticate.verifyAuthAdmin, descuentoController.eliminar)
