@@ -15,14 +15,13 @@ if (!fs.existsSync(uploadDir)) {
 
 const multipartyMiddleware = multiparty({uploadDir: uploadDir, maxFilesSize: 5 * 1024 * 1024})
 
+api.put('/actualizar/:id', [authenticate.verifyAuthAdmin, multipartyMiddleware], descuentoController.actualizarDescuento)
 api.post('/registrar', [authenticate.verifyAuthAdmin, multipartyMiddleware], descuentoController.registrarDescuento)
 api.get('/listar/:filtro?', authenticate.verifyAuthAdmin, descuentoController.listarDescuentos)
-api.get('/obtenerPortada/:img', descuentoController.obtenerPortada)
+api.get('/obtenerPortada/:img', descuentoController.obtenerBanner)
 api.get('/obtener/:id', descuentoController.obtenerPorId)
-api.delete('/:id', authenticate.verifyAuthAdmin, descuentoController.eliminar)
+api.delete('/:id', authenticate.verifyAuthAdmin, descuentoController.eliminarDescuento)
 
-//Falta el metodo para actualizar
-//api.put('/:id', authenticate.verifyAuthAdmin, cuponController.actualizar)
 
 
 

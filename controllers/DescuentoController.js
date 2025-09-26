@@ -1,13 +1,21 @@
 const Descuento = require('../models/descuento')
+const fs = require('fs')
+const path = require('path')
+const os = require('os');
+const multiparty = require('connect-multiparty');
+const messages = require('../helpers/responseMessages');
+
 
 const registrarDescuento = async (req, res) => {
     try {
         if(req.user){
             let data = req.body
+            console.log(req.files.banner)
 
             const img_path= req.files.banner.path;
-            const name= img_path.split('\\')
-            const banner_name= name[2]
+            const separator = path.sep;
+            const name = img_path.split(separator)
+            const banner_name= name[name.length - 1]
 
             data.banner= banner_name
             const reg= await Descuento.create(data)
@@ -38,7 +46,53 @@ const listarDescuentos = async (req, res) => {
     }
 }
 
-const obtenerPortada = (req, res) => {
+const actualizarDescuento = async (req, res) => {
+    try {
+        const id= req.params.id
+
+        const campos = req.body;
+        const archivo = req.files?.banner;
+        console.log(campos)
+        console.log(archivo)
+
+        if(archivo) {
+            console.log(1)
+            const image_path= archivo.path
+
+            const separator = path.sep;
+            const name = image_path.split(separator)
+            const portada_name= name[name.length-1]
+
+            console.log(image_path)
+            console.log(name)
+            console.log(portada_name)
+            console.log('Archivo:', archivo);
+            campos.banner = portada_name
+        }
+      
+        console.log('Campos:', campos);
+        
+        const object = campos
+        const actualizado= await Descuento.findByIdAndUpdate(id, object, {new: true})
+
+        if(archivo) {
+             fs.stat('../uploads/descuentos/' + campos.banner, function(err){
+                if(!err){
+                    fs.unlink('../uploads/descuentos/' + campos.banner, (err)=> {
+                        if(err) throw err;
+                    })
+                }
+            })
+        }
+
+        res.json({dato: actualizado})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+const obtenerBanner = (req, res) => {
     try {
         const img_name = req.params['img']
         console.log(img_name)
@@ -73,14 +127,14 @@ const obtenerPorId = async (req, res) => {
     }
 }
 
-const eliminar = async (req, res) => {
+const eliminarDescuento = async (req, res) => {
     try {
         const id= req.params.id
         const objetoEliminado = await Descuento.findByIdAndDelete(id)
         if(!objetoEliminado) {
             res.status(404).json({message: messages.producto.NOT_FOUND})
         } else {
-            res.json({message: messages.genericMessage('remove', 'producto')})
+            res.json({message: messages.genericMessage('remove', 'descuento')})
         }
     } catch (error) {
         console.error(error)
@@ -91,7 +145,8 @@ const eliminar = async (req, res) => {
 module.exports = {
     registrarDescuento,
     listarDescuentos,
-    obtenerPortada,
+    actualizarDescuento,
+    obtenerBanner,
     obtenerPorId,
-    eliminar
+    eliminarDescuento
 }
