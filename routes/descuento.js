@@ -20,7 +20,9 @@ api.post('/registrar', [authenticate.verifyAuthAdmin, multipartyMiddleware], des
 api.get('/listar/:filtro?', authenticate.verifyAuthAdmin, descuentoController.listarDescuentos)
 api.get('/obtenerPortada/:img', descuentoController.obtenerBanner)
 api.get('/obtener/:id', descuentoController.obtenerPorId)
+api.get('/obtener-descuentos/', descuentoController.obtenerDescuentosActivos)
 api.delete('/:id', authenticate.verifyAuthAdmin, descuentoController.eliminarDescuento)
+
 
 
 

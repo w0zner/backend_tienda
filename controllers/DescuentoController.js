@@ -12,6 +12,10 @@ const registrarDescuento = async (req, res) => {
             let data = req.body
             console.log(req.files.banner)
 
+            if(data.descuento > 99 || data.descuento < 0) {
+                return res.status(400).send({message: 'El descuento esta en un rango invalido[0-99 %]'})
+            }
+
             const img_path= req.files.banner.path;
             const separator = path.sep;
             const name = img_path.split(separator)
@@ -54,6 +58,10 @@ const actualizarDescuento = async (req, res) => {
         const archivo = req.files?.banner;
         console.log(campos)
         console.log(archivo)
+
+        if(campos.descuento > 99 || campos.descuento < 0) {
+            return res.status(400).send({message: 'El descuento esta en un rango invalido[0-99 %]'})
+        }
 
         if(archivo) {
             console.log(1)
@@ -142,11 +150,39 @@ const eliminarDescuento = async (req, res) => {
     }
 }
 
+const obtenerDescuentosActivos = async (req, res) => {
+    try {
+        const descuentos = await Descuento.find().sort({createdAt: -1});
+
+        let descuentosActivos=[]
+        const fechaActual = Date.parse(new Date().toString())/1000;
+
+        descuentos.forEach((descuento) => {
+            const fechaInicio = Date.parse(descuento.fecha_inicio.toString())/1000;
+            const fechaFin = Date.parse(descuento.fecha_fin.toString())/1000;
+
+            if(fechaActual >= fechaInicio && fechaActual <= fechaFin) {
+                descuentosActivos.push(descuento)
+            }
+        })
+
+        if(descuentosActivos.length === 0) {
+            return res.status(404).send({message: 'No hay descuentos activos', data: undefined})
+        }
+
+        res.status(200).send({data: descuentosActivos})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 module.exports = {
     registrarDescuento,
     listarDescuentos,
     actualizarDescuento,
     obtenerBanner,
     obtenerPorId,
-    eliminarDescuento
+    eliminarDescuento,
+    obtenerDescuentosActivos
 }
