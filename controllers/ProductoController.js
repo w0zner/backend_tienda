@@ -40,6 +40,17 @@ const listarProductosRecomendados = async (req, res) => {
     }
 }
 
+const listarProductosNuevos = async (req, res) => {
+    try {
+        const productos = await Model.find().sort({createdAt: -1}).limit(8);
+              
+        res.json({data: productos})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message}) 
+    }
+}
+
 const obtenerPorId = async (req, res) => {
     try {
         const id = req.params.id
@@ -294,4 +305,19 @@ const obtener_producto_slug = async (req, res) => {
 }
 
 
-module.exports = { listar, obtenerPorId, guardar, actualizar, eliminar, obtenerPortada, listar_inventario, eliminar_item_inventario, guardar_item_inventario, actualizarVariedades, agregar_imagen_galeria, obtener_producto_slug, listarProductosRecomendados }
+module.exports = { 
+    listar, 
+    obtenerPorId, 
+    guardar, 
+    actualizar, 
+    eliminar, 
+    obtenerPortada, 
+    listar_inventario, 
+    eliminar_item_inventario, 
+    guardar_item_inventario, 
+    actualizarVariedades, 
+    agregar_imagen_galeria, 
+    obtener_producto_slug, 
+    listarProductosRecomendados,
+    listarProductosNuevos    
+}
