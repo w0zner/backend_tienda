@@ -19,6 +19,7 @@ api.get('/listar-productos/:filtro?', controller.listar)
 api.get('/obtener-por-slug/:slug?', controller.obtener_producto_slug)
 api.get('/listar-productos-recomendados/:categoria', controller.listarProductosRecomendados)
 api.get('/listar-productos-nuevos', controller.listarProductosNuevos)
+api.get('/listar-productos-mas-vendidos', controller.listarProductosMasVendidos)
 
 
 //productos
