@@ -78,6 +78,25 @@ function zfill(number, width) {
     }
 }
 
+const obtenerVentasPorUsuario = async (req, res) => {
+    try {
+        const usuario = req.params['id']
+
+        const reg = await Venta.find({usuario: usuario}).sort({createdAt: -1})
+
+        if(reg.length >= 1) {
+            res.status(200).send({data:reg})
+        } else {
+            res.status(200).send({data:undefined})
+        }
+
+    } catch(error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 module.exports = {
-    registroVenta
+    registroVenta,
+    obtenerVentasPorUsuario
 }
