@@ -6,7 +6,7 @@ const Carrito = require('../models/carrito')
 const registroVenta = async (req, res) => {
     if(req.user) {
         const dataVenta = req.body
-        const dataDetalles = dataVenta.detalles
+        const dataDetalles = dataVenta.detalleVenta
         //let detallesGuardados = []
         let serie;
         let correlativo;
@@ -36,6 +36,7 @@ const registroVenta = async (req, res) => {
         dataVenta.estado = 'Procesando'
 
         console.log(dataVenta)
+        console.log(dataDetalles)
         const ventaGuardada = await Venta.create(dataVenta)
 
         dataDetalles.forEach(async element => {
@@ -48,7 +49,7 @@ const registroVenta = async (req, res) => {
 
             await Producto.findByIdAndUpdate({_id: element.producto}, {stock: newStock})
 
-            await Carrito.remove({usuario: dataVenta.usuario})
+            await Carrito.deleteMany({usuario: dataVenta.usuario})
         });
 
         res.status(200).send({venta: ventaGuardada}) 
