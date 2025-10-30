@@ -14,6 +14,7 @@ const VentaSchema = Schema({
     estado: {type: String},
     direccion: {type: Schema.Types.ObjectId, ref: 'direccion'},
     nota: {type: String},
+    payment: {type: String, require: true},
     createdAt: {type: Date, default: Date.now, require: true}
 })
 

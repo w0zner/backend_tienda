@@ -97,7 +97,26 @@ const obtenerVentasPorUsuario = async (req, res) => {
     }
 }
 
+const obtenerPorId = async (req, res) => {
+    try {
+        const id = req.params.id
+        
+        const venta= await Venta.findById(id)
+        .populate('direccion')
+        .populate('usuario');
+
+        const detalles = await Dventa.find({ venta: id })
+        .populate('producto');
+
+        res.json({venta: venta, detalles: detalles})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 module.exports = {
     registroVenta,
-    obtenerVentasPorUsuario
+    obtenerVentasPorUsuario,
+    obtenerPorId
 }
