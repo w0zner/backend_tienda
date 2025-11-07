@@ -20,6 +20,7 @@ const carrito_route = require('./routes/carrito')
 const venta_route = require('./routes/venta')
 const descuento_route = require('./routes/descuento')
 const contacto_route = require('./routes/contacto')
+const review_route = require('./routes/review')
 
 //definimos puerto e inicializamos express
 const port = process.env.PORT || 5000;
@@ -98,6 +99,8 @@ app.use(prefix + '/carrito', carrito_route);
 app.use(prefix + '/ventas', venta_route);
 app.use(prefix + '/descuentos', descuento_route);
 app.use(prefix + '/contacto', contacto_route);
+app.use(prefix + '/review', review_route);
+
 
 
 module.exports = app;
