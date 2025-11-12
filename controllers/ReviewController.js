@@ -47,6 +47,25 @@ const obtenerPorUsuario = async (req, res) => {
   }
 };
 
+const obtenerPorProducto = async (req, res) => {
+  try {
+    const usuario = req.params.producto;
+
+    const review = await Review.find({ producto: producto })
+    .populate('producto')
+    .populate('usuario')
+    .populate('venta')
+    .sort(
+      { createdAt: -1 },
+    );
+
+    res.json({ data: review });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error " + error.message });
+  }
+};
+
 const guardar = async (req, res) => {
   try {
     const body = req.body;
@@ -78,4 +97,4 @@ const update = async (req, res) => {
   }
 };
 
-module.exports = { obtenerPorId, guardar, obtenerPorVentaProducto, update, obtenerPorUsuario };
+module.exports = { obtenerPorId, guardar, obtenerPorVentaProducto, update, obtenerPorUsuario, obtenerPorProducto };
