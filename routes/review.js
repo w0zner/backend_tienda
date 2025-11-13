@@ -5,6 +5,11 @@ const authenticate = require("../middlewares/authenticate");
 const api = express.Router();
 
 api.get(
+  "/obtener-resenhas/:producto",
+  authenticate.verifyAuthAdmin,
+  reviewController.obtenerPorProducto
+);
+api.get(
   "/:venta/:producto",
   authenticate.verifyAuth,
   reviewController.obtenerPorVentaProducto,
@@ -14,11 +19,7 @@ api.get(
   authenticate.verifyAuth,
   reviewController.obtenerPorUsuario
 );
-api.get(
-  "/:producto",
-  authenticate.verifyAuthAdmin,
-  reviewController.obtenerPorProducto
-);
+
 api.get("/:id", authenticate.verifyAuth, reviewController.obtenerPorId);
 api.post("/", authenticate.verifyAuth, reviewController.guardar);
 api.put("/:id", authenticate.verifyAuth, reviewController.update);

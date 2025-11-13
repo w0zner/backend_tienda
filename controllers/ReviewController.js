@@ -49,7 +49,9 @@ const obtenerPorUsuario = async (req, res) => {
 
 const obtenerPorProducto = async (req, res) => {
   try {
-    const usuario = req.params.producto;
+    console.log('prod')
+    const producto = req.params.producto;
+    console.log('prod_id ', producto )
 
     const review = await Review.find({ producto: producto })
     .populate('producto')
@@ -58,6 +60,8 @@ const obtenerPorProducto = async (req, res) => {
     .sort(
       { createdAt: -1 },
     );
+
+    console.log('review', review)
 
     res.json({ data: review });
   } catch (error) {
