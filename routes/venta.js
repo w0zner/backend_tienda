@@ -5,6 +5,7 @@ const authenticate = require('../middlewares/authenticate')
 const api = express.Router()
 
 api.post('/registrar', authenticate.verifyAuth, ventaController.registroVenta)
+api.get('/obtener-ventas/:desde?/:hasta?', authenticate.verifyAuthAdmin, ventaController.obtenerVentas)
 api.get('/obtener-ventas-usuario/:id', authenticate.verifyAuth, ventaController.obtenerVentasPorUsuario)
 api.get('/obtener-venta/:id', authenticate.verifyAuth, ventaController.obtenerPorId)
 

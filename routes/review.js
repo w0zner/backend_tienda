@@ -6,7 +6,6 @@ const api = express.Router();
 
 api.get(
   "/obtener-resenhas/:producto",
-  authenticate.verifyAuth,
   reviewController.obtenerPorProducto
 );
 api.get(
