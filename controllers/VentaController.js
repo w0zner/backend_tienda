@@ -119,19 +119,34 @@ const obtenerVentas = async (req, res) => {
     try {
         const desde = req.params['desde']
         const hasta = req.params['hasta']
-
+        let fechaInicio = null;
+        let fechaFin = null;
         
 
-        let hdesde = Date.parse(new Date(desde + 'T00:00:00'))/1000;
-        let hhasta = Date.parse(new Date(hasta + 'T00:59:00'))/1000;
-        console.log(hdesde)
-        console.log(hhasta)
+        console.log('fecha inicio', desde)
+        console.log('fecha fin', fechaFin)
 
-        const reg = await Venta.find().populate('usuario').populate('direccion').sort({createdAt: -1})
+        let filtro = {}
+        console.log(desde.length)
+        if(desde && desde != 'undefined') {
+            fechaInicio = new Date(desde + 'T00:00:00.000Z');
+            if(hasta && hasta != 'undefined') {
+                fechaFin = new Date(hasta + 'T00:59:00.000Z');
+            } else {
+                fechaFin = new Date();
+            }
 
-        if(reg.length >= 1) {
-            res.status(200).send({data:reg})
-        } 
+             console.log('fecha inicio', fechaInicio)
+             console.log('fecha fin', fechaFin)
+
+            filtro = {createdAt:{$gte: fechaInicio, $lte: fechaFin}}
+        }
+
+        console.log(filtro)
+        
+        const ventas = await Venta.find(filtro).populate('usuario').populate('direccion').sort({createdAt: -1})
+
+        res.status(200).send({data:ventas}) 
     } catch(error) {
         console.error(error)
         res.status(500).json({message: 'Error '+error.message})
