@@ -136,9 +136,6 @@ const obtenerVentas = async (req, res) => {
                 fechaFin = new Date();
             }
 
-             console.log('fecha inicio', fechaInicio)
-             console.log('fecha fin', fechaFin)
-
             filtro = {createdAt:{$gte: fechaInicio, $lte: fechaFin}}
         }
 
@@ -153,9 +150,57 @@ const obtenerVentas = async (req, res) => {
     }
 }
 
+const updateEstado = async (req, res) => {
+    try {
+        const id = req.params.id
+        const data = req.body
+        console.log(id)
+        console.log(data)
+        const venta= await Venta.findByIdAndUpdate({_id: id}, {estado: data.value})
+
+        res.json({data: venta})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+const obtenerVentasPorNroVenta = async (req, res) => {
+    try {
+        const nroVenta = req.params['nroventa']
+        
+        console.log('nroVenta', nroVenta)
+
+        const ventas = await Venta.find({nventa: nroVenta}).populate('usuario').populate('direccion').sort({createdAt: -1})
+
+        res.status(200).send({data:ventas}) 
+    } catch(error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
+const obtenerVentasPorEstado = async (req, res) => {
+    try {
+        const estado = req.params['estado']
+        
+        console.log('estado', estado)
+
+        const ventas = await Venta.find({estado: estado}).populate('usuario').populate('direccion').sort({createdAt: -1})
+
+        res.status(200).send({data:ventas}) 
+    } catch(error) {
+        console.error(error)
+        res.status(500).json({message: 'Error '+error.message})
+    }
+}
+
 module.exports = {
     registroVenta,
     obtenerVentasPorUsuario,
     obtenerPorId,
-    obtenerVentas
+    obtenerVentas,
+    updateEstado,
+    obtenerVentasPorNroVenta,
+    obtenerVentasPorEstado
 }

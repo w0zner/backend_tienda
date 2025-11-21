@@ -6,9 +6,14 @@ const api = express.Router()
 
 api.post('/registrar', authenticate.verifyAuth, ventaController.registroVenta)
 api.get('/obtener-ventas/:desde?/:hasta?', authenticate.verifyAuthAdmin, ventaController.obtenerVentas)
+api.get('/obtener-ventas/:desde?/:hasta?', authenticate.verifyAuthAdmin, ventaController.obtenerVentas)
+api.get('/obtener-ventas-nventa/:nroventa?', authenticate.verifyAuthAdmin, ventaController.obtenerVentasPorNroVenta)
+api.get('/obtener-ventas-estado/:estado?', authenticate.verifyAuthAdmin, ventaController.obtenerVentasPorEstado)
+
 api.get('/obtener-ventas-usuario/:id', authenticate.verifyAuth, ventaController.obtenerVentasPorUsuario)
 api.get('/obtener-venta/:id', authenticate.verifyAuth, ventaController.obtenerPorId)
 api.get('/obtener-venta-admin/:id', authenticate.verifyAuthAdmin, ventaController.obtenerPorId)
+api.put('/actualizar-estado/:id', authenticate.verifyAuthAdmin, ventaController.updateEstado)
 
 //api.delete('/eliminar/:id', authenticate.verifyAuth, carritoController.eliminar_item_carrito)
 
