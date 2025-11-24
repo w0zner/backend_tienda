@@ -284,7 +284,8 @@ const registroCliente = async (req, res) => {
                         from: 'noreply.tiendita@gmail.com',
                         to: data.email,
                         subject: 'Verifica tu cuenta',
-                        html: `<p>Haz clic para verificar tu cuenta de usuario: <a href="${link}">Verificar</a></p>`
+                        html: `<p>Haz clic en el siguiente enlace para verificar tu cuenta de usuario:</p>
+                               <p><a href="${link}" style="color:#1a73e8; text-decoration:none; font-weight:bold;">Verificar cuenta</a></p>`
                     });
 
                     //res.status(201).json({ message: 'Registro exitoso. Verifica tu email.' });

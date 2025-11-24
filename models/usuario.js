@@ -20,6 +20,7 @@ const UsuarioSchema = new mongoose.Schema({
     tipo_documento: { type: String, required: false },
     ruc: {type: String, required: false},
     denominacion: {type: String, required: false},
+    activo: {type: Boolean, default: true},
     createdAt: {type: Date, default: Date.now}
 });
 

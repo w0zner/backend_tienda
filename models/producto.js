@@ -14,7 +14,7 @@ const ProductoSchema = new mongoose.Schema({
     categoria: {type: String, required: true},
     variedades: [{type: Object, required: false}],
     titulo_variedad: {type: String, required: false},
-    estado: {type: String, default:'Edicion', required: true},
+    estado: {type: String, default:'Edicion', enum: ['Edicion', 'Activo', 'Inactivo', 'Agotado'], required: true},
     createdAt: {type: Date, default: Date.now},
 })
 
