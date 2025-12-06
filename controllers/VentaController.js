@@ -195,6 +195,135 @@ const obtenerVentasPorEstado = async (req, res) => {
     }
 }
 
+//KPI
+const kpi_ganacias_mensuales = async (req, res) => {
+    if(req.user.role == 'ADMIN') {
+        try {
+            let enero = 0;
+            let febrero = 0;
+            let marzo = 0;
+            let abril = 0;
+            let mayo = 0;
+            let junio = 0;
+            let julio = 0;
+            let agosto = 0;
+            let septiembre = 0;
+            let octubre = 0;
+            let noviembre = 0;
+            let diciembre = 0;
+
+            const current_date = new Date()
+            const year = current_date.getFullYear()
+            
+            const ventas = await Venta.find({createdAt: {$gte: new Date(year, 0, 1), $lte: new Date(year, 11, 31)}})//.populate('usuario').populate('direccion').sort({createdAt: -1})
+
+
+            for(let item of ventas) {
+                const createdDate = new Date(item.createdAt)
+                const month = createdDate.getMonth() + 1
+
+                
+                if(month == 1) {
+                    enero += item.subtotal;
+                } else if (month == 2) {
+                    febrero += item.subtotal;
+                } else if (month == 3) {
+                    marzo += item.subtotal;
+                } else if (month == 4) {
+                    abril += item.subtotal;
+                } else if (month == 5) {
+                    mayo += item.subtotal;
+                } else if (month == 6) {
+                    junio += item.subtotal;
+                } else if (month == 7) {
+                    julio += item.subtotal;
+                } else if (month == 8) {
+                    agosto += item.subtotal;
+                } else if (month == 9) {
+                    septiembre += item.subtotal;
+                } else if (month == 10) {
+                    octubre += item.subtotal;
+                } else if (month == 11) {
+                    noviembre += item.subtotal;
+                } else if (month == 12) {
+                    diciembre += item.subtotal;
+                }
+            }
+
+            res.status(200).send({enero: enero, febrero: febrero, marzo: marzo, abril: abril, mayo: mayo, junio: junio, julio: julio, agosto: agosto, septiembre: septiembre, octubre: octubre, noviembre: noviembre, diciembre: diciembre}) 
+        } catch(error) {
+            console.error(error)
+            res.status(500).json({message: 'Error '+error.message})
+        }
+    } else {
+        res.status(500).send({message: 'NoAccess'})
+    }
+}
+
+const kpi_cantidad_ventas_mensuales = async (req, res) => {
+    if(req.user.role == 'ADMIN') {
+        try {
+            let enero = 0;
+            let febrero = 0;
+            let marzo = 0;
+            let abril = 0;
+            let mayo = 0;
+            let junio = 0;
+            let julio = 0;
+            let agosto = 0;
+            let septiembre = 0;
+            let octubre = 0;
+            let noviembre = 0;
+            let diciembre = 0;
+
+            const current_date = new Date()
+            const year = current_date.getFullYear()
+            
+            const ventas = await Venta.find({createdAt: {$gte: new Date(year, 0, 1), $lte: new Date(year, 11, 31)}})//.populate('usuario').populate('direccion').sort({createdAt: -1})
+
+
+            for(let item of ventas) {
+                const createdDate = new Date(item.createdAt)
+                const month = createdDate.getMonth() + 1
+
+                
+                if(month == 1) {
+                    enero += 1;
+                } else if (month == 2) {
+                    febrero += 1;
+                } else if (month == 3) {
+                    marzo += 1;
+                } else if (month == 4) {
+                    abril += 1;
+                } else if (month == 5) {
+                    mayo += 1;
+                } else if (month == 6) {
+                    junio += 1;
+                } else if (month == 7) {
+                    julio += 1;
+                } else if (month == 8) {
+                    agosto += 1;
+                } else if (month == 9) {
+                    septiembre += 1;
+                } else if (month == 10) {
+                    octubre += 1;
+                } else if (month == 11) {
+                    noviembre += 1;
+                } else if (month == 12) {
+                    diciembre += 1;
+                }
+            }
+
+            res.status(200).send({enero: enero, febrero: febrero, marzo: marzo, abril: abril, mayo: mayo, junio: junio, julio: julio, agosto: agosto, septiembre: septiembre, octubre: octubre, noviembre: noviembre, diciembre: diciembre}) 
+        } catch(error) {
+            console.error(error)
+            res.status(500).json({message: 'Error '+error.message})
+        }
+    } else {
+        res.status(500).send({message: 'NoAccess'})
+    }
+}
+
 module.exports = {
     registroVenta,
     obtenerVentasPorUsuario,
@@ -202,5 +331,7 @@ module.exports = {
     obtenerVentas,
     updateEstado,
     obtenerVentasPorNroVenta,
-    obtenerVentasPorEstado
+    obtenerVentasPorEstado,
+    kpi_ganacias_mensuales,
+    kpi_cantidad_ventas_mensuales
 }
