@@ -150,6 +150,31 @@ const update = async (req, res) => {
     }
 }
 
+const updateStatus = async (req, res) => {
+    if(req.user) {
+        try {
+            const id = req.params.id
+            const requestBody= req.body
+            const usuario = await Usuario.findById(id)
+    
+            if(!usuario) {
+                return res.status(404).json({
+                    message: 'No existe el usuario'
+                })
+            } 
+    
+            const usuarioActualizado = await Usuario.findByIdAndUpdate(id, {activo: requestBody.estado}, {new: true})
+    
+            res.status(200).json({data: usuarioActualizado})
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+        }
+    } else {
+        res.status(500).json({mssagge: 'Acceso denegado'})
+    }
+}
+
 const remove = async (req, res) => {
     if(req.user) {
         try {
@@ -396,5 +421,6 @@ module.exports = {
     clientGetById,
     cliente_update,
     registroCliente,
-    verificarCuentaUsuario
+    verificarCuentaUsuario,
+    updateStatus
 }

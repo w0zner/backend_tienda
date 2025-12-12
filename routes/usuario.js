@@ -14,6 +14,7 @@ api.post('/', authenticate.verifyAuthAdmin, dataForClient.addDefaultData, usuari
 api.get('/:id', authenticate.verifyAuthAdmin,usuarioController.getById);
 api.get('/buscar/:tipo/:filtro?', authenticate.verifyAuthAdmin, usuarioController.listar);
 api.put('/:id', authenticate.verifyAuthAdmin, usuarioController.update)
+api.put('/actualizar-estado/:id', authenticate.verifyAuthAdmin, usuarioController.updateStatus)
 api.delete('/:id', authenticate.verifyAuthAdmin, usuarioController.remove)
 
 api.post('/registro',dataForClient.addDefaultClientData, usuarioController.registroCliente);
