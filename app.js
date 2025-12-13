@@ -69,7 +69,7 @@ app.use(cookieParser());
 
 //configuraciones para las cabeceras y evitar cors
 const corsOptions = {
-    origin: ['https://api.mystore.mom','http://localhost:4200', 'http://localhost:5200', 'http://localhost:6200'],  // El origen de tu aplicación frontend Angular
+    origin: ['http://159.89.188.46', 'https://api.mystore.mom','http://localhost:4200', 'http://localhost:5200', 'http://localhost:6200'],  // El origen de tu aplicación frontend Angular
     //credentials: true,  // Importante para permitir cookies
     allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Access-Control-Allow-Request-Method'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
