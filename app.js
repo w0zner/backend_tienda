@@ -59,7 +59,7 @@ mongoose.connect(process.env.MONGO_URI)
         .catch((err) => console.error(err))
 
 //implementación de un log        
-app.use(morgan("dev"));        
+app.use(morgan("common"));        
 
 //configuraciones para tratar con json        
 app.use(bodyparser.urlencoded({extended: true}))        
