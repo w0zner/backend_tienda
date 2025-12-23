@@ -137,6 +137,11 @@ const login = async (req, res) => {
             return res.status(403).json({ message: 'Debes verificar tu cuenta antes de iniciar sesión' });
         }
 
+        if (!user.activo) {
+            console.log('EEEEE')
+            return res.status(403).json({ message: 'Tu usuario esta inactivo. Contacta con el administrador.' });
+        }
+
         const passwordBD = bcrypt.compareSync(data.password, user.password);
 
         if(!passwordBD) {
