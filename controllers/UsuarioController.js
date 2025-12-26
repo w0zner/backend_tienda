@@ -62,6 +62,7 @@ const listar = async (req, res) => {
         try {
             const tipo = req.params['tipo']
             const filtro = req.params['filtro']
+            console.log(filtro)
     
             if(tipo==null || tipo=='null') {
                 let usuarios = await Usuario.find().populate('rol');
@@ -74,6 +75,19 @@ const listar = async (req, res) => {
                     res.status(200).json({data: clientes})
                 } else if(tipo=='nombre') {
                     let usuarios = await Usuario.find({nombres:new RegExp(filtro,'i')}).populate('rol');;
+                    const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+                    res.status(200).json({data: clientes})
+                } else if(tipo=='email') {
+                    let usuarios = await Usuario.find({email:new RegExp(filtro,'i')}).populate('rol');;
+                    const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+                    res.status(200).json({data: clientes})
+                } else if(tipo=='rol') {
+                    let usuarios = await Usuario.find().populate('rol');
+                    console.log(usuarios)   
+                    const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+                    res.status(200).json({data: clientes})
+                } else if(tipo=='activo') { 
+                    let usuarios = await Usuario.find({activo:new RegExp(filtro,'i')}).populate('rol');;
                     const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
                     res.status(200).json({data: clientes})
                 }
@@ -412,6 +426,48 @@ const verificarCuentaUsuario = async (req, res) => {
       }
 }
 
+const listarUsuarioSistemaAdmin = async (req, res) => {
+    if(req.user) {
+        try {
+            const tipo = req.params['tipo']
+            const filtro = req.params['filtro']
+                        console.log(tipo)
+
+            console.log(filtro)
+    
+            if(tipo==null || tipo=='null') {
+                let usuarios = await Usuario.find().populate('rol');
+                //const clientes = usuarios.filter(user => user.rol.nombre == process.env.ROL_CLIENT)
+                res.status(200).json({data: usuarios})
+            } else {
+                if(tipo=='apellido'){
+                    let usuarios = await Usuario.find({apellidos:new RegExp(filtro,'i')}).populate('rol');;
+                    res.status(200).json({data: usuarios})
+                } else if(tipo=='nombre') {
+                    let usuarios = await Usuario.find({nombres:new RegExp(filtro,'i')}).populate('rol');;
+                    res.status(200).json({data: usuarios})
+                } else if(tipo=='email') {
+                    let usuarios = await Usuario.find({email:new RegExp(filtro,'i')}).populate('rol');;
+                    res.status(200).json({data: usuarios})
+                } else if(tipo=='rol') {
+                    let usuarios = await Usuario.find().populate('rol');
+                    usuarios = usuarios.filter(u => u.rol.nombre == filtro);
+                    res.status(200).json({data: usuarios})
+                } else if(tipo=='estado') { 
+                    let usuarios = await Usuario.find({activo:filtro}).populate('rol');
+                    console.log(usuarios)
+                    res.status(200).json({data: usuarios})
+                }
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({mssagge: 'Error inesperado'})
+        }   
+    } else {
+        res.status(500).json({mssagge: 'Acceso denegado'})
+    }
+}
+
 module.exports = {
     registrar,
     listar,
@@ -422,5 +478,6 @@ module.exports = {
     cliente_update,
     registroCliente,
     verificarCuentaUsuario,
-    updateStatus
+    updateStatus,
+    listarUsuarioSistemaAdmin
 }

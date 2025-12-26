@@ -13,6 +13,7 @@ api.post('/add-user', verifyLocation.verifyEndpoint, verifyLocation.hideHeader ,
 api.post('/', authenticate.verifyAuthAdmin, dataForClient.addDefaultData, usuarioController.registrar);
 api.get('/:id', authenticate.verifyAuthAdmin,usuarioController.getById);
 api.get('/buscar/:tipo/:filtro?', authenticate.verifyAuthAdmin, usuarioController.listar);
+api.get('/buscar-usuario-sistema/:tipo/:filtro?', authenticate.verifyAuthAdmin, usuarioController.listarUsuarioSistemaAdmin);
 api.put('/:id', authenticate.verifyAuthAdmin, usuarioController.update)
 api.put('/actualizar-estado/:id', authenticate.verifyAuthAdmin, usuarioController.updateStatus)
 api.delete('/:id', authenticate.verifyAuthAdmin, usuarioController.remove)
