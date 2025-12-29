@@ -19,8 +19,8 @@ const login_admin = async (req, res) => {
         })
     } else {
         let user = usuarios_arr[0]
-
-        if(user.rol.nombre == process.env.ROL_ADMIN  || 'ADMIN') {
+        console.log(user)
+        if(user.rol.nombre == process.env.ROL_ADMIN) {
             const passwordBD = bcrypt.compareSync(data.password, user.password);
             
             if(!passwordBD) {
@@ -33,27 +33,33 @@ const login_admin = async (req, res) => {
     
             const accesToken = jwt.createToken(user)
             const refreshToken = jwt.refreshToken(user)
+            
+            user.ultimoIngreso = new Date()
+            await user.save()
 
             // Guardar el refresh token en una cookie HttpOnly
-            res.status(200)
-            /*.cookie('refreshToken', refreshToken, {
-              domain:'localhost',
-              name:'refreshToken',
-              httpOnly: true,
-              secure: false, // Solo en HTTPS
-              sameSite: 'None',//'Strict',
-              expires: new Date(Date.now() + 3600000)
-            })*/
-            .json({
-                message: 'Usuario logueado!',
-                data: user,
-                token: accesToken,
-                refreshToken: refreshToken
-            })
+            setTimeout(() => {
+              res.status(200)
+                /*.cookie('refreshToken', refreshToken, {
+                domain:'localhost',
+                name:'refreshToken',
+                httpOnly: true,
+                secure: false, // Solo en HTTPS
+                sameSite: 'None',//'Strict',
+                expires: new Date(Date.now() + 3600000)
+                })*/
+                .json({
+                    message: 'Usuario logueado!',
+                    data: user,
+                    token: accesToken,
+                    refreshToken: refreshToken
+                })  
+            }, 500);
+            
         } else {
             return res.status(403)
                 .json({
-                    message: 'No tienes el permiso para acceder a esta sección.',
+                    message: 'No puedes acceder a este sitio. Contacte con el administrador',
                     data: undefined
                 })
         }
@@ -155,6 +161,9 @@ const login = async (req, res) => {
         
         const accesToken = jwt.createToken(user)
         const refreshToken = jwt.refreshToken(user)
+
+        user.ultimoIngreso = new Date()
+        await user.save()
 
         res.status(200)
         .json({

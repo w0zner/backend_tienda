@@ -11,6 +11,8 @@ const api = express.Router();
 api.post('/add-user', verifyLocation.verifyEndpoint, verifyLocation.hideHeader ,usuarioController.registrar);
 
 api.post('/', authenticate.verifyAuthAdmin, dataForClient.addDefaultData, usuarioController.registrar);
+api.post('/registrar-usuario-admin', authenticate.verifyAuthAdmin, usuarioController.registrar);
+
 api.get('/:id', authenticate.verifyAuthAdmin,usuarioController.getById);
 api.get('/buscar/:tipo/:filtro?', authenticate.verifyAuthAdmin, usuarioController.listar);
 api.get('/buscar-usuario-sistema/:tipo/:filtro?', authenticate.verifyAuthAdmin, usuarioController.listarUsuarioSistemaAdmin);

@@ -21,6 +21,7 @@ const UsuarioSchema = new mongoose.Schema({
     ruc: {type: String, required: false},
     denominacion: {type: String, required: false},
     activo: {type: Boolean, default: true},
+    ultimoIngreso: {type: Date, default: null},
     createdAt: {type: Date, default: Date.now}
 });
 

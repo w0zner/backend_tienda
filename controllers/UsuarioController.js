@@ -15,6 +15,7 @@ const registrar = async (req, res) => {
         
         if(existeUsuario.length == 0) {
             if(data.rol) {
+                console.log("Rol: ", data.rol)
                 const rol =  await Rol.findOne({nombre: data.rol})
                 if(rol) {
                     data.rol = rol._id;

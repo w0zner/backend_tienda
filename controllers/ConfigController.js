@@ -72,7 +72,8 @@ const actualizar = async (req, res) => {
                 logo: logo_name,
                 establecimiento: object.establecimiento,
                 punto: object.punto,
-                correlativo: object.correlativo
+                correlativo: object.correlativo,
+                color: object.color
             })
 
             fs.stat('../backend/uploads/configuraciones/' + config.logo, function(err){
@@ -91,7 +92,8 @@ const actualizar = async (req, res) => {
                 titulo: object.titulo,
                 establecimiento: object.establecimiento,
                 punto: object.punto,
-                correlativo: object.correlativo
+                correlativo: object.correlativo,
+                color: object.color
             })
         }
 

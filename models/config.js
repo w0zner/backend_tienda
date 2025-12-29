@@ -12,6 +12,7 @@ const ConfigSchema = new mongoose.Schema({
     establecimiento: {type: String, required: true},
     punto: {type: String, required: true},
     correlativo: {type: String, required: true},
+    color:{type: String, default: '#3b506c'},
 })
 
 module.exports = mongoose.model('config', ConfigSchema)
