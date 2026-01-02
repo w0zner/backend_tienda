@@ -5,12 +5,14 @@ require('dotenv').config()
 const secret = process.env.SECRET 
 
 const createToken = (usuario) => {
+    console.log('USER ',usuario)
     const payload = {
         sub: usuario._id,
         nombres: usuario.nombres,
         apellidos: usuario.apellidos,
         email: usuario.email,
         role: usuario.rol.nombre,
+        permisos: usuario.rol.permisos.map(p => p.key),
         iat: moment().unix(),
         exp: moment().add(15, 'minutes').unix()
     }
@@ -24,6 +26,7 @@ const refreshToken = (usuario) => {
         apellidos: usuario.apellidos,
         email: usuario.email,
         role: usuario.rol.nombre,
+        permisos: usuario.rol.permisos.map(p => p.key),
         iat: moment().unix(),
         exp: moment().add(1, 'hours').unix()
     }

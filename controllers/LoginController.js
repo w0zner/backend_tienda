@@ -9,7 +9,14 @@ const login_admin = async (req, res) => {
     const data = req.body;
     let usuarios_arr = [];
 
-    usuarios_arr = await Usuario.find({email: data.email}).populate('rol')
+    usuarios_arr = await Usuario.find({email: data.email})
+    .populate({
+        path: 'rol',
+        populate: {
+        path: 'permisos'
+        }
+    });
+    
 
     if(usuarios_arr.length == 0) {
         return res.status(404)
@@ -128,7 +135,13 @@ const login = async (req, res) => {
     const data = req.body;
     let usuarios_arr = [];
 
-    usuarios_arr = await Usuario.find({email: data.email}).populate('rol')
+    usuarios_arr = await Usuario.find({email: data.email})
+    .populate({
+        path: 'rol',
+        populate: {
+        path: 'permisos'
+        }
+    });
 
     if(usuarios_arr.length == 0) {
         return res.status(404)
@@ -138,7 +151,7 @@ const login = async (req, res) => {
         })
     } else {
         let user = usuarios_arr[0]
-
+        console.log('SUR ', user)
         if (!user.verificado) {
             return res.status(403).json({ message: 'Debes verificar tu cuenta antes de iniciar sesión' });
         }

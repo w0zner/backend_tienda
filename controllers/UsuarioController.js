@@ -106,7 +106,7 @@ const getById = async (req, res) => {
     if(req.user) {
         try {
             const id = req.params.id
-            const usuario = await Usuario.findById(id);
+            const usuario = await Usuario.findById(id).populate('rol');
 
             if (!usuario) {
                 return res.status(404).json({ mensaje: 'Usuario no encontrado' });

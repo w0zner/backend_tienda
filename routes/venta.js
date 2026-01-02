@@ -1,6 +1,7 @@
 const express = require('express')
 const ventaController = require('../controllers/VentaController')
 const authenticate = require('../middlewares/authenticate')
+const checkPermission= require('../middlewares/checkPermission')
 
 const api = express.Router()
 
@@ -15,8 +16,8 @@ api.get('/obtener-venta/:id', authenticate.verifyAuth, ventaController.obtenerPo
 api.get('/obtener-venta-admin/:id', authenticate.verifyAuthAdmin, ventaController.obtenerPorId)
 api.put('/actualizar-estado/:id', authenticate.verifyAuthAdmin, ventaController.updateEstado)
 
-api.get('/obtener-kpi-ganancias', authenticate.verifyAuthAdmin, ventaController.kpi_ganacias_mensuales)
-api.get('/obtener-kpi-cantidad', authenticate.verifyAuthAdmin, ventaController.kpi_cantidad_ventas_mensuales)
+api.get('/obtener-kpi-ganancias',  authenticate.verifyAuthAdmin, checkPermission('kpi.read'), ventaController.kpi_ganacias_mensuales)
+api.get('/obtener-kpi-cantidad',  authenticate.verifyAuthAdmin, checkPermission('kpi.read'), ventaController.kpi_cantidad_ventas_mensuales)
 
 
 //api.delete('/eliminar/:id', authenticate.verifyAuth, carritoController.eliminar_item_carrito)
