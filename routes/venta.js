@@ -14,10 +14,10 @@ api.get('/obtener-ventas-estado/:estado?', authenticate.verifyAuthAdmin, ventaCo
 api.get('/obtener-ventas-usuario/:id', authenticate.verifyAuth, ventaController.obtenerVentasPorUsuario)
 api.get('/obtener-venta/:id', authenticate.verifyAuth, ventaController.obtenerPorId)
 api.get('/obtener-venta-admin/:id', authenticate.verifyAuthAdmin, ventaController.obtenerPorId)
-api.put('/actualizar-estado/:id', authenticate.verifyAuthAdmin, ventaController.updateEstado)
+api.put('/actualizar-estado/:id', authenticate.verifyAuthAdmin, checkPermission('venta.put'), ventaController.updateEstado)
 
-api.get('/obtener-kpi-ganancias',  authenticate.verifyAuthAdmin, checkPermission('kpi.read'), ventaController.kpi_ganacias_mensuales)
-api.get('/obtener-kpi-cantidad',  authenticate.verifyAuthAdmin, checkPermission('kpi.read'), ventaController.kpi_cantidad_ventas_mensuales)
+api.get('/obtener-kpi-ganancias',  authenticate.verifyAuthAdmin, checkPermission('kpi.get'), ventaController.kpi_ganacias_mensuales)
+api.get('/obtener-kpi-cantidad',  authenticate.verifyAuthAdmin, checkPermission('kpi.get'), ventaController.kpi_cantidad_ventas_mensuales)
 
 
 //api.delete('/eliminar/:id', authenticate.verifyAuth, carritoController.eliminar_item_carrito)
