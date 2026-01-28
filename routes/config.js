@@ -19,8 +19,8 @@ const api = express.Router()
 api.get('/', controller.obtenerConfig)
 api.get('/', authenticate.verifyAuthAdmin, controller.obtenerConfig)
 api.get('/obtenerLogo/:img', controller.obtenerLogo)
-api.post('/', checkPermission('config.post'), authenticate.verifyAuthAdmin, controller.guardar)
-api.put('/', checkPermission('config.put'), [authenticate.verifyAuthAdmin, multipartyMiddleware], controller.actualizar)
-api.delete('/:id', checkPermission('config.delete'), authenticate.verifyAuthAdmin, controller.eliminar)
+api.post('/',  authenticate.verifyAuthAdmin, checkPermission('config.post'), controller.guardar)
+api.put('/',  [authenticate.verifyAuthAdmin, checkPermission('config.put'), multipartyMiddleware], controller.actualizar)
+api.delete('/:id',  authenticate.verifyAuthAdmin, checkPermission('config.delete'), controller.eliminar)
 
 module.exports = api

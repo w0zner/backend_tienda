@@ -3,6 +3,7 @@ const Permiso = require('../models/permiso');
 const create = async (req, res) => {
     try {
         const data = req.body
+        console.log(data)
         const permiso = await Permiso.create(data)
         res.status(200).json({data: permiso})
     } catch(error) {
@@ -15,7 +16,8 @@ const create = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-        const permisos = await Permiso.find().sort('key')
+        const filtro = req.params['filtro']
+        const permisos = await Permiso.find({key:new RegExp(filtro,'i')}).sort('key')
         res.status(200).json({data: permisos})
     } catch(error) {
         console.error(error)

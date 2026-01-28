@@ -8,7 +8,7 @@ const authenticate = require('../middlewares/authenticate')
 const api = express.Router();
 
 api.post('/', authenticate.verifyAuthAdmin, checkPermission('permiso.post'), ctrl.create);
-api.get('/',  authenticate.verifyAuthAdmin, checkPermission('permiso.get'),ctrl.findAll); //checkPermission('permission.read') checkPermission('permission.create') checkPermission('permission.delete')checkPermission('permission.update')
+api.get('/:filtro?',  authenticate.verifyAuthAdmin, checkPermission('permiso.get'),ctrl.findAll); //checkPermission('permission.read') checkPermission('permission.create') checkPermission('permission.delete')checkPermission('permission.update')
 api.get('/:id',  authenticate.verifyAuthAdmin, checkPermission('permiso.get'),ctrl.findOne);
 api.put('/:id',  authenticate.verifyAuthAdmin, checkPermission('permiso.put'),ctrl.update);
 api.delete('/:id', authenticate.verifyAuthAdmin, checkPermission('permiso.delete'),ctrl.eliminar);
