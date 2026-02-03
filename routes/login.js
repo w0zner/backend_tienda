@@ -8,5 +8,6 @@ api.post('/refresh', loginController.refresh)
 
 api.post('/admin', loginController.login_admin)
 api.post('/admin/refresh', loginController.refresh_admin)
+api.post('/admin/logout', loginController.logout_admin);
 
 module.exports = api

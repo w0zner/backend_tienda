@@ -64,20 +64,20 @@ mongoose.connect(process.env.MONGO_URI)
 app.use(morgan("dev"));        
 
 //configuraciones para tratar con json        
+app.use(cookieParser());
 app.use(bodyparser.urlencoded({extended: true}))        
 app.use(bodyparser.json({limit:'50mb', extended: true}))
-
-app.use(cookieParser());
 
 //configuraciones para las cabeceras y evitar cors
 const corsOptions = {
     origin: ['http://localhost:4200', 'http://localhost:5200', 'http://localhost:6200'],  // El origen de tu aplicación frontend Angular
-    //credentials: true,  // Importante para permitir cookies
+    credentials: true,  // Importante para permitir cookies
     allowedHeaders: ['Authorization', 'X-API-KEY', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Access-Control-Allow-Request-Method'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 };
   
 app.use(cors(corsOptions));  // Usar la configuración CORS
+
 
 
 // app.use((req,res,next)=>{

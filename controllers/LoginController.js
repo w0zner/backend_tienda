@@ -44,8 +44,17 @@ const login_admin = async (req, res) => {
             user.ultimoIngreso = new Date()
             await user.save()
 
+
             // Guardar el refresh token en una cookie HttpOnly
-            setTimeout(() => {
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'Lax',
+                path: '/',
+                maxAge: 24 * 60 * 60 * 1000//7 * 24 * 60 * 60 * 1000
+            })
+
+  
               res.status(200)
                 /*.cookie('refreshToken', refreshToken, {
                 domain:'localhost',
@@ -59,9 +68,8 @@ const login_admin = async (req, res) => {
                     message: 'Usuario logueado!',
                     data: user,
                     token: accesToken,
-                    refreshToken: refreshToken
+                    //refreshToken: refreshToken
                 })  
-            }, 500);
             
         } else {
             return res.status(403)
@@ -74,9 +82,9 @@ const login_admin = async (req, res) => {
 }
 
 const refresh_admin = async (req, res) => {
-  //console.log(req.cookies)
+  console.log("REFRESH_TOKEN_COOKIES ", req.cookies)
 
-  const {refreshToken} = req.body//req.cookies.refreshToken;
+  const {refreshToken} = req.cookies;
 
   if (!refreshToken) return res.status(401).json({ message: 'No refresh token' });
 
@@ -244,8 +252,25 @@ const refresh = async (req, res) => {
       return res.status(401)
       .json({ message: 'Refresh token expirado' });
     }
-  }
+}
+
+const logout_admin = async (req, res) => {
+    try {
+        const { refreshToken } = req.cookies;
+
+        res.clearCookie('refreshToken', {
+            path: '/',
+            httpOnly: true,
+            sameSite: 'Lax',
+            secure: false // localhost
+        });
+
+        return res.status(200).json({ message: 'Sesión cerrada' });
+    } catch(error) {
+        return res.status(500).json({ message: 'Error al cerrar sesión' });
+    }
+}
 
 
 
-module.exports = { login, login_admin, refresh_admin, refresh }
+module.exports = { login, login_admin, refresh_admin, refresh, logout_admin }
